@@ -1,0 +1,12 @@
+[submodule "DaisySP"]
+	path = DaisySP
+	url = https://github.com/electro-smith/DaisySP.git
+[submodule "stmlib"]
+	path = stmlib
+	url = https://github.com/pichenettes/stmlib.git
+[submodule "libDaisy"]
+	path = libDaisy
+	url = https://github.com/electro-smith/libDaisy.git
+[submodule "DaisyYMNK"]
+	path = DaisyYMNK
+	url = git@github.com:alexiszbik/DaisyYMNK.git
