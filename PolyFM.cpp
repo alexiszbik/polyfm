@@ -2,7 +2,7 @@
 #include "daisysp.h"
 
 #include "DaisyYMNK/DaisyYMNK.h"
-#include "PolyFMCore.h"
+#include "Source/PolyFMCore.h"
 
 PolyFMCore polyFM;
 DaisyBase db = DaisyBase(&polyFM);
