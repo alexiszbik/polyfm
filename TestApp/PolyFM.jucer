@@ -30,10 +30,10 @@
       </GROUP>
     </GROUP>
     <GROUP id="{A12DB881-4C41-9585-D67B-22ED5A5AB4E0}" name="JuicyDaisy">
-      <FILE id="slTZy8" name="JDMainComponent.cpp" compile="1" resource="0"
-            file="../JuicyDaisy/JDMainComponent.cpp"/>
-      <FILE id="QzYA6m" name="JDMainComponent.h" compile="0" resource="0"
-            file="../JuicyDaisy/JDMainComponent.h"/>
+      <FILE id="slTZy8" name="TestModuleComponent.cpp" compile="1" resource="0"
+            file="../JuicyDaisy/TestModuleComponent.cpp"/>
+      <FILE id="QzYA6m" name="TestModuleComponent.h" compile="0" resource="0"
+            file="../JuicyDaisy/TestModuleComponent.h"/>
       <FILE id="U00e2B" name="ModulePage.cpp" compile="1" resource="0" file="../JuicyDaisy/ModulePage.cpp"/>
       <FILE id="pHKzZo" name="ModulePage.h" compile="0" resource="0" file="../JuicyDaisy/ModulePage.h"/>
       <FILE id="dkylXz" name="ParametersPage.cpp" compile="1" resource="0"

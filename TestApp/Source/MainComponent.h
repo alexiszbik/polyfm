@@ -1,14 +1,20 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "JDMainComponent.h"
+#include "TestModuleComponent.h"
+
+#include "PolyFMCore.h"
+
 
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public JDMainComponent
+class MainComponent  : public TestModuleComponent
 {
 
+public:
+    MainComponent();
+    
 };
