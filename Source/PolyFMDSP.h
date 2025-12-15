@@ -23,6 +23,7 @@ using namespace ydaisy;
 #define OPERATOR_PARAM(_name) \
 Coarse##_name, \
 Fine##_name, \
+Mode##_name, \
 Attack##_name, \
 Decay##_name, \
 Sustain##_name, \
@@ -39,7 +40,7 @@ public:
         Feedback,
         TimeRatio,
         Brightness,
-        ChorusState,
+        //ChorusState,
         
         OPERATOR_PARAM(A),
         OPERATOR_PARAM(B),
@@ -67,7 +68,7 @@ private:
     
 private:
     PolySynth synth;
-    Chorus chorus;
+    //Chorus chorus;
     
     unsigned long timeStamp = 0;
     
@@ -78,7 +79,7 @@ private:
         {"Feedback", 0.394465},
         {"TimeRatio", 0},
         {"Brightness", 0.929108},
-        {"ChorusState", 1},
+        //{"ChorusState", 1},
         {"CoarseA", 0.113132},
         {"FineA", 0},
         {"AttackA", 0.917869},

@@ -36,6 +36,9 @@ void SynthVoice::setNoteOn(Note note) {
     }
     
     setPitch(note.pitch);
+    for (int i = 0; i < kOperatorCount; i++) {
+        op[i].adsr.Retrigger(false);
+    }
     setGate(true);
     noteTimeStamp = note.timeStamp;
 }

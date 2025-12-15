@@ -13,6 +13,7 @@
 #define DECLARE_OPERATOR(_name) \
 {Coarse##_name,  xstr(Coarse##_name),   false}, \
 {Fine##_name,    xstr(Fine##_name),     false}, \
+{Mode##_name,    xstr(Mode##_name),     false}, \
 {Attack##_name,  xstr(Attack##_name),   false}, \
 {Decay##_name,   xstr(Decay##_name),    false}, \
 {Sustain##_name, xstr(Sustain##_name),  false}, \
@@ -27,7 +28,7 @@ PolyFMDSP::PolyFMDSP()
     {Feedback,      "Feedback",     false},
     {TimeRatio,     "TimeRatio",    false},
     {Brightness,    "Brightness",   false},
-    {ChorusState,   "ChorusState",  false},
+    /*{ChorusState,   "ChorusState",  false},*/
     DECLARE_OPERATOR(A),
     DECLARE_OPERATOR(B),
     DECLARE_OPERATOR(C),
@@ -44,11 +45,11 @@ void PolyFMDSP::init(int channelCount, double sampleRate) {
     DSPKernel::init(channelCount, sampleRate);
 
     synth.init(sampleRate);
-    
+    /*
     chorus.Init(sampleRate);
     
     chorus.SetPan(0.2, 0.8);
-    chorus.SetLfoDepth(0.9, -0.9);
+    chorus.SetLfoDepth(0.9, -0.9);*/
 }
 
 void PolyFMDSP::processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) {
@@ -115,7 +116,7 @@ float PolyFMDSP::opIimeValue(int operatorId, int aParam, float min, float max) {
 void PolyFMDSP::process(float** buf, int frameCount) {
     DSPKernel::process(buf, frameCount);
     
-    bool chorusState = getValue(ChorusState);
+    //bool chorusState = getValue(ChorusState);
     
     synth.setGlide(getValue(Glide));
     synth.setAlgorithm(valueMap(getValue(Algorithm), 0, SynthVoice::kAlgorithmCount - 1));
@@ -139,12 +140,12 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         
         float out = synth.process();
         
-        if (chorusState) {
-            chorus.Process(out * 0.707);
+        if (0) {
+            /*chorus.Process(out * 0.707);
             buf[0][i] = chorus.GetLeft();
             for (int channel = 1; channel < channelCount; channel++) {
                 buf[channel][i] = chorus.GetRight();
-            }
+            }*/
         } else {
             buf[0][i] = out * 0.2;
             for (int channel = 1; channel < channelCount; channel++) {

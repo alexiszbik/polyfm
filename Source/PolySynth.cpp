@@ -35,7 +35,7 @@ void PolySynth::init(double sampleRate)  {
 
 void PolySynth::setNote(bool isNoteOn, Note note) {
     
-    int voiceCount;
+    int voiceCount = 1;
     switch (polyMode) {
         case Mono:
             voiceCount = 1;

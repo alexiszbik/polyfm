@@ -14,21 +14,29 @@ PolyFMCore::PolyFMCore()
 : ModuleCore(new PolyFMDSP(),
      {
         //12 Knobs
-        {KnobGlide,             kKnob,      15, "Glide"},
-        {KnobAlgorithm,         kKnob,      16, "Algorithm"},
-        {KnobFeedback,          kKnob,      17, "Feedback"},
-        {KnobTimeRatio,         kKnob,      18, "TimeRatio"},
-        {KnobBrightness,        kKnob,      19, "Brightness"},
-        {KnobCoarse,            kKnob,      20, "Coarse"},
-        {KnobFine,              kKnob,      21, "Fine"},
-        {KnobAttack,            kKnob,      22, "Attack"},
-        {KnobDecay,             kKnob,      23, "Decay"},
-        {KnobSustain,           kKnob,      24, "Sustain"},
-        {KnobRelease,           kKnob,      25, "Release"},
-        {KnobAmount,            kKnob,      26, "Amount"},
+        {MuxKnob_1,             kKnob,      HIDPin(0,0),  "MuxKnob_1"},
+        {MuxKnob_2,             kKnob,      HIDPin(0,1),  "MuxKnob_2"},
+        {MuxKnob_3,             kKnob,      HIDPin(0,2),  "MuxKnob_3"},
+        {MuxKnob_4,             kKnob,      HIDPin(0,3),  "MuxKnob_4"},
+        {MuxKnob_5,             kKnob,      HIDPin(0,4),  "MuxKnob_5"},
+        {MuxKnob_6,             kKnob,      HIDPin(0,5),  "MuxKnob_6"},
+        {MuxKnob_7,             kKnob,      HIDPin(0,6),  "MuxKnob_7"},
+        {MuxKnob_8,             kKnob,      HIDPin(0,7),  "MuxKnob_8"},
+        {MuxKnob_9,             kKnob,      HIDPin(0,8),  "MuxKnob_9"},
+        {MuxKnob_10,            kKnob,      HIDPin(0,9),  "MuxKnob_10"},
+        {MuxKnob_11,            kKnob,      HIDPin(0,10), "MuxKnob_11"},
+        {MuxKnob_12,            kKnob,      HIDPin(0,11), "MuxKnob_12"},
+        {MuxKnob_13,            kKnob,      HIDPin(0,12), "MuxKnob_13"},
+        {MuxKnob_14,            kKnob,      HIDPin(0,13), "MuxKnob_14"},
+        {MuxKnob_15,            kKnob,      HIDPin(0,14), "MuxKnob_15"},
+        {MuxKnob_16,            kKnob,      HIDPin(0,15), "MuxKnob_16"},
     
-        {ButtonPreviousOperator,     kButton,    27, "Previous Map"},
-        {ButtonNextOperator,         kButton,    28, "Next Map"},
+        {KnobFeedback,          kKnob,      16,           "Feedback"},
+        {KnobTimeRatio,         kKnob,      17,           "TimeRatio"},
+        {KnobBrightness,        kKnob,      18,           "Brightness"},
+    
+        {ButtonPreviousOperator,     kButton,    5, "Previous Map"},
+        {ButtonNextOperator,         kButton,    6, "Next Map"},
     
         /*{ButtonPreviousPreset, kButton},
         {ButtonNextPreset, kButton}*/
@@ -38,23 +46,23 @@ PolyFMCore::PolyFMCore()
 }
 
 void PolyFMCore::lockAllKnobs() {
-    for (auto knob = (int)KnobCoarse; knob <= (int)KnobAmount; knob++) {
+    for (auto knob = (int)MuxKnob_1; knob <= (int)MuxKnob_6; knob++) {
         lockHID(knob);
     }
 }
 
-void PolyFMCore::setCurrentOperator(unsigned int opIndex) {
-    currentOpIndex = opIndex;
+void PolyFMCore::setCurrentOperators(unsigned int opIndex) {
+    currentOpsIndex = opIndex;
     
-    const int opSize = SynthVoice::kOperatorCount;
-    if (currentOpIndex < 0) {
-        currentOpIndex = (int)opSize - 1;
+    const int opSize = SynthVoice::kOperatorCount / 2;
+    if (currentOpsIndex < 0) {
+        currentOpsIndex = (int)opSize - 1;
     } else {
-        currentOpIndex = currentOpIndex % opSize;
+        currentOpsIndex = currentOpsIndex % opSize;
     }
     
 #if defined _SIMULATOR_
-    std::cout << currentOpIndex << std::endl;
+    std::cout << currentOpsIndex << std::endl;
 #endif
     lockAllKnobs();
 }
@@ -65,21 +73,21 @@ bool isBetweenParameterIndex(int x, int a, int b) {
 
 void PolyFMCore::updateHIDValue(unsigned int index, float value) {
 
-    auto currentOpMap = &opParameterMap.at(currentOpIndex);
+    auto currentOpMap = &opParameterMap.at(currentOpsIndex);
     switch (index) {
         case ButtonPreviousOperator:
-            setCurrentOperator(currentOpIndex - 1);
+            setCurrentOperators(currentOpsIndex - 1);
             break;
             
         case ButtonNextOperator:
-            setCurrentOperator(currentOpIndex + 1);
+            setCurrentOperators(currentOpsIndex + 1);
             break;
             
         default:
-            if (isBetweenParameterIndex(index, KnobGlide, KnobBrightness)) {
-                dspKernel->setParameterValue(parameterMap.at(index), value);
-            } else if (isBetweenParameterIndex(index, KnobCoarse, KnobAmount)) {
-                dspKernel->setParameterValue(currentOpMap->at(index - KnobCoarse), value);
+            if (isBetweenParameterIndex(index, MuxKnob_1, MuxKnob_16)) {
+                dspKernel->setParameterValue(currentOpMap->at(index - MuxKnob_1), value);
+            } else {
+                dspKernel->setParameterValue(parameterMap.at(index - MuxKnob_16 - 1), value);
             }
             break;
     }

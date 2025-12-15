@@ -16,27 +16,38 @@
 #define DSP_PARAM_OP(_name) \
 PolyFMDSP::Coarse##_name, \
 PolyFMDSP::Fine##_name, \
+PolyFMDSP::Mode##_name, \
+PolyFMDSP::Amount##_name, \
 PolyFMDSP::Attack##_name, \
 PolyFMDSP::Decay##_name, \
 PolyFMDSP::Sustain##_name, \
-PolyFMDSP::Release##_name, \
-PolyFMDSP::Amount##_name
+PolyFMDSP::Release##_name
+
 
 class PolyFMCore : public ModuleCore {
 public:
     enum {
-        KnobGlide = 0,
-        KnobAlgorithm,
+        MuxKnob_1 = 0,
+        MuxKnob_2,
+        MuxKnob_3,
+        MuxKnob_4,
+        MuxKnob_5,
+        MuxKnob_6,
+        MuxKnob_7,
+        MuxKnob_8,
+        MuxKnob_9,
+        MuxKnob_10,
+        MuxKnob_11,
+        MuxKnob_12,
+        MuxKnob_13,
+        MuxKnob_14,
+        MuxKnob_15,
+        MuxKnob_16,
+        
         KnobFeedback,
         KnobTimeRatio,
         KnobBrightness,
-        KnobCoarse,
-        KnobFine,
-        KnobAttack,
-        KnobDecay,
-        KnobSustain,
-        KnobRelease,
-        KnobAmount,
+        
         ButtonPreviousOperator,
         ButtonNextOperator,
         /*ButtonPreviousPreset,
@@ -50,24 +61,20 @@ protected:
     
 private:
     void lockAllKnobs();
-    void setCurrentOperator(unsigned int opIndex);
+    void setCurrentOperators(unsigned int opIndex);
     
 private:
     vector<int> parameterMap = {
-        PolyFMDSP::Glide,
-        PolyFMDSP::Algorithm,
         PolyFMDSP::Feedback,
         PolyFMDSP::TimeRatio,
         PolyFMDSP::Brightness,
     };
     
     vector<vector<int>> opParameterMap = {
-        {DSP_PARAM_OP(A)},
-        {DSP_PARAM_OP(B)},
-        {DSP_PARAM_OP(C)},
-        {DSP_PARAM_OP(D)},
+        {DSP_PARAM_OP(A), DSP_PARAM_OP(B)},
+        {DSP_PARAM_OP(C), DSP_PARAM_OP(D)}
     };
     
-    int currentOpIndex = 0;
+    int currentOpsIndex = 0;
 
 };
