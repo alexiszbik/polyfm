@@ -35,8 +35,10 @@ PolyFMCore::PolyFMCore()
         {KnobTimeRatio,         kKnob,      17,           "TimeRatio"},
         {KnobBrightness,        kKnob,      18,           "Brightness"},
     
-        {ButtonPreviousOperator,     kButton,    5, "Previous Map"},
-        {ButtonNextOperator,         kButton,    6, "Next Map"},
+        {ButtonPreviousOperator,     kButton,    6, "Previous Map"},
+        {ButtonNextOperator,         kButton,    7, "Next Map"},
+
+        {MidiLed,         kLed,    10, "Led"},
     
         /*{ButtonPreviousPreset, kButton},
         {ButtonNextPreset, kButton}*/
@@ -49,6 +51,10 @@ void PolyFMCore::lockAllKnobs() {
     for (auto knob = (int)MuxKnob_1; knob <= (int)MuxKnob_6; knob++) {
         lockHID(knob);
     }
+}
+
+int PolyFMCore::getCurrentOpIdx() {
+    return currentOpsIndex;
 }
 
 void PolyFMCore::setCurrentOperators(unsigned int opIndex) {
@@ -71,6 +77,15 @@ bool isBetweenParameterIndex(int x, int a, int b) {
     return x >= a && x <= b;
 }
 
+void PolyFMCore::processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) {
+    ModuleCore::processMIDI(messageType, channel, dataA, dataB);
+    if (messageType == kNoteOn) {
+        setHIDValue(MidiLed, 1);
+    } else if (messageType == kNoteOff) {
+        setHIDValue(MidiLed, 0);
+    }
+}
+
 void PolyFMCore::updateHIDValue(unsigned int index, float value) {
 
     auto currentOpMap = &opParameterMap.at(currentOpsIndex);
@@ -81,6 +96,9 @@ void PolyFMCore::updateHIDValue(unsigned int index, float value) {
             
         case ButtonNextOperator:
             setCurrentOperators(currentOpsIndex + 1);
+            break;
+            
+        case MidiLed:
             break;
             
         default:

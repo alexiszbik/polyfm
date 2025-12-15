@@ -52,9 +52,14 @@ public:
         ButtonNextOperator,
         /*ButtonPreviousPreset,
         ButtonNextPreset*/
+        MidiLed
     };
 public:
     PolyFMCore();
+
+    int getCurrentOpIdx();
+
+    virtual void processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) override;
     
 protected:
     void updateHIDValue(unsigned int index, float value) override;
