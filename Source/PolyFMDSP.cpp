@@ -35,10 +35,19 @@ PolyFMDSP::PolyFMDSP()
     DECLARE_OPERATOR(D),
     
 }){
-    loadPreset(&preset);
+#if defined _SIMULATOR_
+    std::cout << getParameterCount() << " parameters" << std::endl;
+    
+#endif
+    
+    //loadPreset(&preset);
 }
 
 PolyFMDSP::~PolyFMDSP() {
+}
+
+void loadPreset(float* values) {
+    
 }
 
 void PolyFMDSP::init(int channelCount, double sampleRate) {

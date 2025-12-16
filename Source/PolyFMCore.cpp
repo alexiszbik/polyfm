@@ -37,6 +37,8 @@ PolyFMCore::PolyFMCore()
     
         {ButtonPreviousOperator,     kButton,    6, "Previous Map"},
         {ButtonNextOperator,         kButton,    7, "Next Map"},
+        {ButtonSave,     kButton,    8, "Save"},
+        {ButtonLoad,         kButton,    9, "Load"},
 
         {MidiLed,         kLed,    10, "Led"},
     
@@ -48,9 +50,14 @@ PolyFMCore::PolyFMCore()
 }
 
 void PolyFMCore::lockAllKnobs() {
-    for (auto knob = (int)MuxKnob_1; knob <= (int)MuxKnob_6; knob++) {
+    for (auto knob = (int)MuxKnob_1; knob <= (int)KnobBrightness; knob++) {
         lockHID(knob);
     }
+}
+
+void PolyFMCore::loadPreset(const float* values) {
+    dspKernel->loadPreset(values);
+    lockAllKnobs();
 }
 
 int PolyFMCore::getCurrentOpIdx() {
@@ -99,6 +106,8 @@ void PolyFMCore::updateHIDValue(unsigned int index, float value) {
             break;
             
         case MidiLed:
+        case ButtonSave:
+        case ButtonLoad:
             break;
             
         default:

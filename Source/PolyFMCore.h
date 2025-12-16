@@ -50,6 +50,8 @@ public:
         
         ButtonPreviousOperator,
         ButtonNextOperator,
+        ButtonSave,
+        ButtonLoad,
         /*ButtonPreviousPreset,
         ButtonNextPreset*/
         MidiLed
@@ -58,6 +60,7 @@ public:
     PolyFMCore();
 
     int getCurrentOpIdx();
+    void loadPreset(const float* values);
 
     virtual void processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) override;
     

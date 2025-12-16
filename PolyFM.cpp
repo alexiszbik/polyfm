@@ -2,10 +2,13 @@
 #include "daisysp.h"
 
 #include "DaisyYMNK/DaisyYMNK.h"
+#include "DaisyYMNK/QSPI/PresetManager.h"
 #include "Source/PolyFMCore.h"
 
+DaisySeed hw;
 PolyFMCore polyFM;
-DaisyBase db = DaisyBase(&polyFM);
+DaisyBase db = DaisyBase(&hw, &polyFM);
+PresetManager pm;
 
 DisplayManager *display = DisplayManager::GetInstance();
 
@@ -47,6 +50,8 @@ inline void floatToCString2(float v, char* buf)
     *buf = '\0';
 }
 
+
+
 char floatChar[8];
 ydaisy::Parameter* lastParam = nullptr;
 const char* name = nullptr;
@@ -81,6 +86,59 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, s
     db.process(out, size);
 }
 
+bool isInit = false;
+
+/*
+#define WAVE_LENGTH 64
+float DSY_QSPI_BSS qspi_buffer[WAVE_LENGTH];
+float wavform_ram[WAVE_LENGTH];*/
+
+void savePresetTest() {
+    float pData[64];
+    auto allParam = polyFM.getAllParameters();
+    uint8_t k = 0;
+    for (auto& param : allParam) {
+        pData[k++] = param->getUIValue();
+    }
+
+    bool result = pm.Save(pData, k);
+    if (result) {
+        display->Write("Save Success!");
+    } else {
+        display->Write("Save Failed!");
+    }
+}
+
+void loadPresetTest() {
+    const float* dataToLoad = pm.Load();
+    uint8_t k = 16;
+    auto allParam = polyFM.getAllParameters();
+    while (k--) {
+        float v = dataToLoad[k];
+        floatToCString2(v, floatChar);
+        display->WriteNow("Load",allParam.at(k)->getName(), floatChar);
+        System::Delay(200);
+        
+    }
+    polyFM.loadPreset(dataToLoad);
+}
+
+void ValueChanged(uint8_t index, float v) { 
+    if (v == 1.0) {
+        if (index == PolyFMCore::ButtonSave) {
+            if (isInit) {
+                display->Write("Save");
+                savePresetTest();
+            }
+           
+        } else if (index == PolyFMCore::ButtonLoad) {
+            display->Write("Load");
+            loadPresetTest();
+            isInit = true;
+        }
+    }
+}
+
 int main(void)
 {
     db.init(AudioCallback);
@@ -88,12 +146,17 @@ int main(void)
     display->Init(&hw);
     display->WriteNow("YMNK", "PolyFM Synth");
 
+    pm.Init(&hw);
+
     polyFM.setHIDValue(PolyFMCore::MidiLed, 1);
+
+    polyFM.setValueChangedCallback(ValueChanged);
 
     for(;;)
     {
         db.listen();
-        displayTimer.Update(); 
+        displayTimer.Update();
         display->Update();
     }
+    
 }

@@ -72,7 +72,7 @@ private:
     
     unsigned long timeStamp = 0;
     
-    Preset preset = {
+    /*Preset<const char*> preset = {
         {"PlayMode", 0.989821},
         {"Glide", 0},
         {"Algorithm", 0},
@@ -108,6 +108,6 @@ private:
         {"SustainD", 1},
         {"ReleaseD", 0.603648},
         {"AmountD", 0.644962},
-        };
+        };*/
     
 };
