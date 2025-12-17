@@ -16,6 +16,7 @@ void SynthVoice::init(double sampleRate) {
         op[i].adsr.Init(sampleRate);
     }
     pitch.setImmediate(60);
+    env.Init(sampleRate);
     this->sampleRate = sampleRate;
 }
 
@@ -25,10 +26,10 @@ void SynthVoice::setPitch(int pitch) {
 
 void SynthVoice::setGate(bool gate) {
     this->gate = gate;
+    //env.SetGate(gate);
 }
 
 void SynthVoice::setNoteOn(Note note) {
-
     if (op[0].adsr.IsRunning() == false) { //In order to avoid clicks we should verify any output operators
         for (int i = kOperatorCount - 1; i >= 0; i--) {
             op[i].phase = 0;
@@ -40,6 +41,7 @@ void SynthVoice::setNoteOn(Note note) {
         op[i].adsr.Retrigger(false);
     }
     setGate(true);
+    env.Retrig();
     noteTimeStamp = note.timeStamp;
 }
 
@@ -71,6 +73,12 @@ void SynthVoice::setOperatorADSR(int operatorId, float attack, float decay, floa
     op[operatorId].adsr.SetReleaseTime(release);
 }
 
+void SynthVoice::setEnvParameters(float attack, float decay, float amount) {
+    env.SetAttack(attack);
+    env.SetDecay(decay);
+    envAmount = amount;
+}
+
 void SynthVoice::setFeedback(float feedbackAmount) {
     this->feedbackAmount = feedbackAmount;
 }
@@ -85,9 +93,11 @@ void SynthVoice::setBrightness(float brightness) {
 
 float SynthVoice::process() {
     
+    float envPitch = env.Process() * (48 * envAmount - 24);
+    
     pitch.dezipperCheck(sampleRate * glide);
     
-    freq = mtof(pitch.getAndStep() + pitchMod);
+    freq = mtof(pitch.getAndStep() + pitchMod + envPitch);
     
     FmAlgorithm* alg = &algorithms[selectedAlgorithm];
     
@@ -109,7 +119,9 @@ float SynthVoice::process() {
         
         opOut[i] = cos((o->phase + modulator * 0.3333f) * PI_F * 2);
         
-        opOut[i] *= o->adsr.Process(gate);
+        float envOut = o->adsr.Process(gate);
+        
+        opOut[i] *= envOut*envOut;
         
         if (i == alg->feedbackOp) {
             feedback = opOut[i];

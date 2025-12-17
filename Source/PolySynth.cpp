@@ -104,7 +104,9 @@ void PolySynth::setNote(bool isNoteOn, Note note) {
             if (noteState.size()) {
                 for (int i = 0; i < voiceCount; i++)
                 {
-                    voices.at(i)->setNoteOn(noteState.back());
+                    if (voices.at(i)->currentPitch() != noteState.back().pitch) {
+                        voices.at(i)->setNoteOn(noteState.back());
+                    }
                     sendNoteOff = false;
                 }
             }
@@ -127,6 +129,10 @@ void PolySynth::setPitchBend(float bend) {
 
 void PolySynth::setModWheel(float value) {
     this->vibratoAmount.setValue(value);
+}
+
+void PolySynth::setTune(float tune) {
+    this->tune = tune;
 }
 
 void PolySynth::setPolyMode(EPolyMode newPolyMode) {
@@ -188,16 +194,22 @@ void PolySynth::setBrightness(float brightness) {
     }
 }
 
+void PolySynth::setEnvParameters(float attack, float decay, float amount) {
+    for (auto v : voices)
+    {
+        v->setEnvParameters(attack, decay, amount);
+    }
+}
+
 float PolySynth::process() {
-    pitchMod = 0;
+    float pitchMod = 0;
     
     float result = 0;
     float idx = 0;
     
-    static const int smoothGlobal = 800;
     bend.dezipperCheck(smoothGlobal);
     vibratoAmount.dezipperCheck(smoothGlobal);
-    pitchMod = bend.getAndStep() + modulation.Process() * vibratoAmount.getAndStep();
+    pitchMod = tune + bend.getAndStep() + modulation.Process() * vibratoAmount.getAndStep();
 
     for (auto v : voices)
     {

@@ -52,8 +52,7 @@ public:
         ButtonNextOperator,
         ButtonSave,
         ButtonLoad,
-        /*ButtonPreviousPreset,
-        ButtonNextPreset*/
+
         MidiLed
     };
 public:
@@ -80,7 +79,13 @@ private:
     
     vector<vector<int>> opParameterMap = {
         {DSP_PARAM_OP(A), DSP_PARAM_OP(B)},
-        {DSP_PARAM_OP(C), DSP_PARAM_OP(D)}
+        {DSP_PARAM_OP(C), DSP_PARAM_OP(D)},
+        {
+            PolyFMDSP::PlayMode, PolyFMDSP::Glide,    PolyFMDSP::Algorithm,  PolyFMDSP::Feedback,
+            PolyFMDSP::Feedback, PolyFMDSP::Feedback, PolyFMDSP::Brightness, PolyFMDSP::Feedback,
+            PolyFMDSP::Feedback, PolyFMDSP::Feedback, PolyFMDSP::Brightness, PolyFMDSP::Feedback,
+            PolyFMDSP::Feedback, PolyFMDSP::Feedback, PolyFMDSP::Brightness, PolyFMDSP::Feedback
+        }
     };
     
     int currentOpsIndex = 0;

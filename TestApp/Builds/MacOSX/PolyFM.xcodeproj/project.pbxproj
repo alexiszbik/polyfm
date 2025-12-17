@@ -27,6 +27,7 @@
 		300F57EFCAFF3C15778D7B4F /* Foundation.framework */ = {isa = PBXBuildFile; fileRef = 5A47259DBE4E6DF803FA058D; };
 		31557FC1F63881C8C0102AB2 /* include_juce_audio_devices.mm */ = {isa = PBXBuildFile; fileRef = DF4EDCC6847AAB1A413B8B48; };
 		34803F0CCBC178E1AE82472C /* decimator.cpp */ = {isa = PBXBuildFile; fileRef = FD27A15B94AE20B4A0BD55FD; };
+		45EEF9B332989904FD10C5D8 /* Lfo.cpp */ = {isa = PBXBuildFile; fileRef = 11AC800AA0379D29307D2993; };
 		478859D8E10EF6DF67D4F752 /* phasor.cpp */ = {isa = PBXBuildFile; fileRef = E81F717D472B684E6F7B634C; };
 		5021A8708C8F7CAEF89ACCB1 /* ParametersPage.cpp */ = {isa = PBXBuildFile; fileRef = CFD26DFE6D1ABD1DABBBA8AB; };
 		54E14EA948958FB874F2A074 /* Main.cpp */ = {isa = PBXBuildFile; fileRef = FA24ADC68F731805FFDC8069; };
@@ -111,6 +112,7 @@
 		0EE2960032949AF01F728001 /* Macros.h */ /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../DaisyYMNK/DSP/Macros.h; sourceTree = SOURCE_ROOT; };
 		0FEEC2C4214F08CBE00335CD /* grainlet.cpp */ /* grainlet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = grainlet.cpp; path = ../../../DaisySP/Source/Noise/grainlet.cpp; sourceTree = SOURCE_ROOT; };
 		1156D019DBCFB5EF805BE9B7 /* include_juce_audio_processors_lv2_libs.cpp */ /* include_juce_audio_processors_lv2_libs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_processors_lv2_libs.cpp; path = ../../JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp; sourceTree = SOURCE_ROOT; };
+		11AC800AA0379D29307D2993 /* Lfo.cpp */ /* Lfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Lfo.cpp; path = ../../../Source/Lfo.cpp; sourceTree = SOURCE_ROOT; };
 		15C1D6E5D5732A79CC0EDEDE /* sampleratereducer.h */ /* sampleratereducer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sampleratereducer.h; path = ../../../DaisySP/Source/Effects/sampleratereducer.h; sourceTree = SOURCE_ROOT; };
 		15DD5646476C89FED45C105B /* delayline.h */ /* delayline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = delayline.h; path = ../../../DaisySP/Source/Utility/delayline.h; sourceTree = SOURCE_ROOT; };
 		16FA6E44A7CEEA4D79631CD1 /* analogsnaredrum.cpp */ /* analogsnaredrum.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = analogsnaredrum.cpp; path = ../../../DaisySP/Source/Drums/analogsnaredrum.cpp; sourceTree = SOURCE_ROOT; };
@@ -158,6 +160,7 @@
 		5A47259DBE4E6DF803FA058D /* Foundation.framework */ /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5F62F9D0A7E10E9C5392CFCC /* stringvoice.h */ /* stringvoice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stringvoice.h; path = ../../../DaisySP/Source/PhysicalModeling/stringvoice.h; sourceTree = SOURCE_ROOT; };
 		5F9BDCEDB9D15A681E63E32C /* chorus.cpp */ /* chorus.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = chorus.cpp; path = ../../../DaisySP/Source/Effects/chorus.cpp; sourceTree = SOURCE_ROOT; };
+		5FC97268EDD00E84C810DA28 /* AttackDecay.h */ /* AttackDecay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AttackDecay.h; path = ../../../DaisyYMNK/DSP/Env/AttackDecay.h; sourceTree = SOURCE_ROOT; };
 		62D4CB9661BF045C5E0DD112 /* analogbassdrum.cpp */ /* analogbassdrum.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = analogbassdrum.cpp; path = ../../../DaisySP/Source/Drums/analogbassdrum.cpp; sourceTree = SOURCE_ROOT; };
 		64C96B7D1D64BEC529D28482 /* ModulePage.cpp */ /* ModulePage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ModulePage.cpp; path = ../../../JuicyDaisy/ModulePage.cpp; sourceTree = SOURCE_ROOT; };
 		656F8496843F6800172A5859 /* tremolo.cpp */ /* tremolo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tremolo.cpp; path = ../../../DaisySP/Source/Effects/tremolo.cpp; sourceTree = SOURCE_ROOT; };
@@ -243,6 +246,7 @@
 		D1A4B7809B29E1457905EC29 /* clockednoise.h */ /* clockednoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = clockednoise.h; path = ../../../DaisySP/Source/Noise/clockednoise.h; sourceTree = SOURCE_ROOT; };
 		D650777130131C220C173964 /* include_juce_audio_basics.mm */ /* include_juce_audio_basics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_audio_basics.mm; path = ../../JuceLibraryCode/include_juce_audio_basics.mm; sourceTree = SOURCE_ROOT; };
 		D6C4FB72D7DF2D8D5318EFCA /* synthsnaredrum.cpp */ /* synthsnaredrum.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = synthsnaredrum.cpp; path = ../../../DaisySP/Source/Drums/synthsnaredrum.cpp; sourceTree = SOURCE_ROOT; };
+		D6F14F97E8C092871E4908DF /* Lfo.h */ /* Lfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Lfo.h; path = ../../../Source/Lfo.h; sourceTree = SOURCE_ROOT; };
 		D6F7C49947D30B1ECF6B30E0 /* crossfade.cpp */ /* crossfade.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = crossfade.cpp; path = ../../../DaisySP/Source/Dynamics/crossfade.cpp; sourceTree = SOURCE_ROOT; };
 		D6F9D956C56BE0EF4DDF317B /* resonator.cpp */ /* resonator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = resonator.cpp; path = ../../../DaisySP/Source/PhysicalModeling/resonator.cpp; sourceTree = SOURCE_ROOT; };
 		D738D899BF7E9673F2BBF2E2 /* variableshapeosc.h */ /* variableshapeosc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = variableshapeosc.h; path = ../../../DaisySP/Source/Synthesis/variableshapeosc.h; sourceTree = SOURCE_ROOT; };
@@ -306,6 +310,7 @@
 		003E4EB93C40D59D0D64B3B6 /* DSP */ = {
 			isa = PBXGroup;
 			children = (
+				BECF8E7D9C3D5EF107CE45D8,
 				455D850F96BE2AC49CF47CF5,
 				7BF47F1D0718F5DBE8BE28E4,
 				DC88B82AAFDCA9C397D98170,
@@ -418,6 +423,8 @@
 		369EC90BAD0ED99A33DA65BF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				11AC800AA0379D29307D2993,
+				D6F14F97E8C092871E4908DF,
 				E5F8A584BB4CAB990D349ED8,
 				7A76783C4603255297B678D8,
 				0EDFBB794986826D906A1508,
@@ -622,6 +629,14 @@
 			name = "JUCE Modules";
 			sourceTree = "<group>";
 		};
+		BECF8E7D9C3D5EF107CE45D8 /* Env */ = {
+			isa = PBXGroup;
+			children = (
+				5FC97268EDD00E84C810DA28,
+			);
+			name = Env;
+			sourceTree = "<group>";
+		};
 		C6159BC208AD2883F01CFB38 /* Synthesis */ = {
 			isa = PBXGroup;
 			children = (
@@ -810,6 +825,7 @@
 				E6DB15A5A227C8C757F9DF3E,
 				79AF0087CE4B0E19C23DD8B9,
 				C7B0A68E273C2809EBF01F4A,
+				45EEF9B332989904FD10C5D8,
 				1A279B03DD5D00CF6974A0CA,
 				F9DAFAD7D2CCA14C6F40D0A7,
 				2D7615FFFA67147253A09180,

@@ -41,6 +41,7 @@ public:
     void setModWheel(float value);
     void setPolyMode(EPolyMode newPolyMode);
     void setGlide(float glide);
+    void setTune(float tune);
     
     void setOperatorRatio(int operatorId, float ratio);
     void setOperatorAmount(int operatorId, float amount);
@@ -48,14 +49,13 @@ public:
     void setFeedback(float feedbackAmount);
     void setAlgorithm(int algorithmIndex);
     void setBrightness(float brightness);
+    void setEnvParameters(float attack, float decay, float amount);
 
 private:
     EPolyMode polyMode = Mono;
-    float pitchMod = 0;
-
-    static short waveforms[4];
-
     vector<SynthVoice*> voices;
+    
+    float tune = 0;
     
     SmoothValue bend;
     SmoothValue vibratoAmount;
@@ -63,4 +63,6 @@ private:
     Oscillator modulation;
     
     vector<Note> noteState;
+    
+    static constexpr int smoothGlobal = 800;
 };

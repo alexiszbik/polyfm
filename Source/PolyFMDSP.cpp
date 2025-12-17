@@ -20,6 +20,12 @@
 {Release##_name, xstr(Release##_name),  false}, \
 {Amount##_name,  xstr(Amount##_name),   false}
 
+#define DECLARE_LFO(_name) \
+{LfoType##_name,            xstr(LfoType##_name),           false}, \
+{LfoDestination##_name,     xstr(LfoDestination##_name),    false}, \
+{LfoRate##_name,            xstr(LfoRate##_name),           false}, \
+{LfoAmount##_name,          xstr(LfoAmount##_name),         false}
+
 PolyFMDSP::PolyFMDSP()
 : DSPKernel({
     {PlayMode,      "PlayMode",     false},
@@ -28,37 +34,40 @@ PolyFMDSP::PolyFMDSP()
     {Feedback,      "Feedback",     false},
     {TimeRatio,     "TimeRatio",    false},
     {Brightness,    "Brightness",   false},
-    /*{ChorusState,   "ChorusState",  false},*/
+    {Volume,        "Volume",       false},
+    
     DECLARE_OPERATOR(A),
     DECLARE_OPERATOR(B),
     DECLARE_OPERATOR(C),
     DECLARE_OPERATOR(D),
+    
+    DECLARE_LFO(A),
+    DECLARE_LFO(B),
+    
+    {EnvDestination,    "EnvDestination",   false},
+    {EnvAttack,         "EnvAttack",        false},
+    {EnvDecay,          "EnvDecay",         false},
+    {EnvAmount,         "EnvAmount",        false},
     
 }){
 #if defined _SIMULATOR_
     std::cout << getParameterCount() << " parameters" << std::endl;
     
 #endif
-    
-    //loadPreset(&preset);
 }
 
 PolyFMDSP::~PolyFMDSP() {
-}
-
-void loadPreset(float* values) {
-    
 }
 
 void PolyFMDSP::init(int channelCount, double sampleRate) {
     DSPKernel::init(channelCount, sampleRate);
 
     synth.init(sampleRate);
-    /*
-    chorus.Init(sampleRate);
     
-    chorus.SetPan(0.2, 0.8);
-    chorus.SetLfoDepth(0.9, -0.9);*/
+    uint8_t k = lfoCount;
+    while (k--) {
+        lfo[k].init(sampleRate);
+    }
 }
 
 void PolyFMDSP::processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) {
@@ -113,33 +122,69 @@ void PolyFMDSP::updateParameter(int index, float value) {
     }
 }
 
+int PolyFMDSP::getLfoParam(int lfoId, int aParam) {
+    static int lfoParamCount = (LfoAmountA - LfoTypeA) + 1;
+    return (lfoId * lfoParamCount) + aParam;
+}
+
 int PolyFMDSP::getOpParam(int operatorId, int aParam) {
     static int opParamCount = (AmountA - CoarseA) + 1;
     return (operatorId * opParamCount) + aParam;
 }
-
+/*
 float PolyFMDSP::opIimeValue(int operatorId, int aParam, float min, float max) {
     return valueMap(getValue(getOpParam(operatorId, aParam)), min, max);
+}*/
+
+float PolyFMDSP::opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min, float max) {
+    float val = getValue(getOpParam(operatorId, aParam));
+    val *= val;
+    if (applyTimeRatio) {
+        val += timeRatio * timeRatio;
+    }
+    return valueMap(val, min, max);
 }
 
 void PolyFMDSP::process(float** buf, int frameCount) {
     DSPKernel::process(buf, frameCount);
     
-    //bool chorusState = getValue(ChorusState);
+    timeRatio = getValue(TimeRatio);
     
     synth.setGlide(getValue(Glide));
     synth.setAlgorithm(valueMap(getValue(Algorithm), 0, SynthVoice::kAlgorithmCount - 1));
     
+    uint8_t k = lfoCount;
+    while (k--) {
+        lfo[k].setRate(getValue(getOpParam(k, LfoRateA)));
+        lfo[k].setAmount(getValue(getOpParam(k, LfoAmountA)));
+        lfo[k].process(frameCount);
+    }
+    
+    float envAttack = getValue(EnvAttack);
+    float envDecay = getValue(EnvDecay);
+    
+    float attack = valueMap(envAttack*envAttack, 0.0001f, 2.f);
+    float decay = valueMap(envDecay*envDecay, 0.0001f, 2.f);
+    
+    synth.setEnvParameters(attack, decay, getValue(EnvAmount));
+    
     for (int i = 0; i < 4; i++) {
         synth.setOperatorADSR(i,
-                              opIimeValue(i, AttackA),
-                              opIimeValue(i, DecayA),
-                              opIimeValue(i, SustainA, 0.001, 1),
-                              opIimeValue(i, ReleaseA));
+                              opTimeValue(i, AttackA, false),
+                              opTimeValue(i, DecayA, true),
+                              opTimeValue(i, SustainA, false, 0.001, 1),
+                              opTimeValue(i, ReleaseA, true));
         
-        synth.setOperatorRatio(i, valueMap(getValue(getOpParam(i, CoarseA)), 1, 16) * (getValue(getOpParam(i, FineA)) + 1));
+        float ratio = valueMap(getValue(getOpParam(i, CoarseA)), 0, 16);
+        if (ratio == 0) {
+            ratio = 0.5;
+        }
+        
+        synth.setOperatorRatio(i, ratio * (getValue(getOpParam(i, FineA)) + 1));
         synth.setOperatorAmount(i, getValue(getOpParam(i, AmountA)));
     }
+    
+    float volume = getValue(Volume); // should be smoothed ?
      
     for (int i = 0; i < frameCount; i++) {
         updateParameters(); // useless only for smoothed parameters
@@ -147,19 +192,15 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         synth.setFeedback(getValue(Feedback));
         synth.setBrightness(getValue(Brightness));
         
-        float out = synth.process();
+        //If we apply lfo to pitch
+        //synth.setTune(lfo[0].getBuffer(i) * 24);
         
-        if (0) {
-            /*chorus.Process(out * 0.707);
-            buf[0][i] = chorus.GetLeft();
-            for (int channel = 1; channel < channelCount; channel++) {
-                buf[channel][i] = chorus.GetRight();
-            }*/
-        } else {
-            buf[0][i] = out * 0.2;
-            for (int channel = 1; channel < channelCount; channel++) {
-                buf[channel][i] = buf[0][i];
-            }
+        float out = synth.process() * volume;
+       
+        buf[0][i] = out * 0.2;
+        for (int channel = 1; channel < channelCount; channel++) {
+            buf[channel][i] = buf[0][i];
         }
+        
     }
 }

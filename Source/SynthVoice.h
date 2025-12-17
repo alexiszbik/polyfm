@@ -35,6 +35,7 @@ public:
     void setFeedback(float feedbackAmount);
     void setAlgorithm(int index);
     void setBrightness(float brightness);
+    void setEnvParameters(float attack, float decay, float amount);
     
     void setNoteOn(Note note);
     void setNoteOff();
@@ -73,13 +74,14 @@ private:
         float phase = 0;
     };
     
-    
     float opOut[kOperatorCount] = {0,0,0,0};
 
     SmoothValue pitch;
     bool gate = false;
 
     Operator op[kOperatorCount];
+    AttackDecay env;
+    float envAmount = 0;
     
     float phaseInc = 0;
     float freq = 0;

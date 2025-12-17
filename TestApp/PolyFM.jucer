@@ -10,6 +10,9 @@
         <FILE id="SrZHms" name="Note.h" compile="0" resource="0" file="../DaisyYMNK/Common/Note.h"/>
       </GROUP>
       <GROUP id="{85E853C6-2AC9-9BC6-FAFF-5AD0B94AE8F2}" name="DSP">
+        <GROUP id="{97D7E1C4-055D-815C-2770-ABC3C85BA847}" name="Env">
+          <FILE id="kV64tO" name="AttackDecay.h" compile="0" resource="0" file="../DaisyYMNK/DSP/Env/AttackDecay.h"/>
+        </GROUP>
         <FILE id="wT8O3Z" name="DSP.h" compile="0" resource="0" file="../DaisyYMNK/DSP/DSP.h"/>
         <FILE id="ggUsia" name="DSPKernel.cpp" compile="1" resource="0" file="../DaisyYMNK/DSP/DSPKernel.cpp"/>
         <FILE id="gwkNMU" name="DSPKernel.h" compile="0" resource="0" file="../DaisyYMNK/DSP/DSPKernel.h"/>
@@ -187,6 +190,8 @@
       <FILE id="Xh6fol" name="daisysp.h" compile="0" resource="0" file="../DaisySP/Source/daisysp.h"/>
     </GROUP>
     <GROUP id="{391843D2-BB38-4C2E-5760-1007496762CE}" name="Source">
+      <FILE id="MecHWe" name="Lfo.cpp" compile="1" resource="0" file="../Source/Lfo.cpp"/>
+      <FILE id="ZvyNKV" name="Lfo.h" compile="0" resource="0" file="../Source/Lfo.h"/>
       <FILE id="RaVGXc" name="FmAlgorithm.h" compile="0" resource="0" file="../Source/FmAlgorithm.h"/>
       <FILE id="FWN2rj" name="PolyFMCore.cpp" compile="1" resource="0" file="../Source/PolyFMCore.cpp"/>
       <FILE id="K24o6e" name="PolyFMCore.h" compile="0" resource="0" file="../Source/PolyFMCore.h"/>

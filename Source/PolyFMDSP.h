@@ -12,6 +12,26 @@
 
 #include "DaisyYMNK/DSP/DSP.h"
 #include "PolySynth.h"
+#include "Lfo.h"
+
+//Destinations
+/*
+ 
+ lfos
+ 
+ pitch
+ octave
+ feedback
+ brightness
+ timeratio
+ 
+ op
+ -> coarse
+ -> fine
+ -> amount
+
+ 
+ */
 
 #include "daisysp.h"
 
@@ -30,6 +50,11 @@ Sustain##_name, \
 Release##_name, \
 Amount##_name
 
+#define LFO_PARAM(_name) \
+LfoType##_name, \
+LfoDestination##_name, \
+LfoRate##_name, \
+LfoAmount##_name
 
 class PolyFMDSP : public DSPKernel {
 public:
@@ -40,12 +65,20 @@ public:
         Feedback,
         TimeRatio,
         Brightness,
-        //ChorusState,
+        Volume,
         
         OPERATOR_PARAM(A),
         OPERATOR_PARAM(B),
         OPERATOR_PARAM(C),
         OPERATOR_PARAM(D),
+        
+        LFO_PARAM(A),
+        LFO_PARAM(B),
+        
+        EnvDestination,
+        EnvAttack,
+        EnvDecay,
+        EnvAmount,
 
         Count
     };
@@ -64,13 +97,19 @@ protected:
     
 private:
     int getOpParam(int operatorId, int aParam);
-    float opIimeValue(int operatorId, int aParam, float min = 0.002f, float max = 2.f);
-    
+    int getLfoParam(int lfoId, int aParam);
+    float opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min = 0.002f, float max = 2.f);
 private:
     PolySynth synth;
+    float timeRatio = 0;
+    
+    static constexpr uint8_t lfoCount = 2;
+    
+    Lfo lfo[lfoCount];
     //Chorus chorus;
     
     unsigned long timeStamp = 0;
+
     
     /*Preset<const char*> preset = {
         {"PlayMode", 0.989821},

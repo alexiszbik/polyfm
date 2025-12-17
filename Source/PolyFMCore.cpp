@@ -13,37 +13,33 @@
 PolyFMCore::PolyFMCore()
 : ModuleCore(new PolyFMDSP(),
      {
-        //12 Knobs
-        {MuxKnob_1,             kKnob,      HIDPin(0,0),  "MuxKnob_1"},
-        {MuxKnob_2,             kKnob,      HIDPin(0,1),  "MuxKnob_2"},
-        {MuxKnob_3,             kKnob,      HIDPin(0,2),  "MuxKnob_3"},
-        {MuxKnob_4,             kKnob,      HIDPin(0,3),  "MuxKnob_4"},
-        {MuxKnob_5,             kKnob,      HIDPin(0,4),  "MuxKnob_5"},
-        {MuxKnob_6,             kKnob,      HIDPin(0,5),  "MuxKnob_6"},
-        {MuxKnob_7,             kKnob,      HIDPin(0,6),  "MuxKnob_7"},
-        {MuxKnob_8,             kKnob,      HIDPin(0,7),  "MuxKnob_8"},
-        {MuxKnob_9,             kKnob,      HIDPin(0,8),  "MuxKnob_9"},
-        {MuxKnob_10,            kKnob,      HIDPin(0,9),  "MuxKnob_10"},
-        {MuxKnob_11,            kKnob,      HIDPin(0,10), "MuxKnob_11"},
-        {MuxKnob_12,            kKnob,      HIDPin(0,11), "MuxKnob_12"},
-        {MuxKnob_13,            kKnob,      HIDPin(0,12), "MuxKnob_13"},
-        {MuxKnob_14,            kKnob,      HIDPin(0,13), "MuxKnob_14"},
-        {MuxKnob_15,            kKnob,      HIDPin(0,14), "MuxKnob_15"},
-        {MuxKnob_16,            kKnob,      HIDPin(0,15), "MuxKnob_16"},
+        {MuxKnob_1,                 kKnob,      HIDPin(0,0),    "MuxKnob_1"},
+        {MuxKnob_2,                 kKnob,      HIDPin(0,1),    "MuxKnob_2"},
+        {MuxKnob_3,                 kKnob,      HIDPin(0,2),    "MuxKnob_3"},
+        {MuxKnob_4,                 kKnob,      HIDPin(0,3),    "MuxKnob_4"},
+        {MuxKnob_5,                 kKnob,      HIDPin(0,4),    "MuxKnob_5"},
+        {MuxKnob_6,                 kKnob,      HIDPin(0,5),    "MuxKnob_6"},
+        {MuxKnob_7,                 kKnob,      HIDPin(0,6),    "MuxKnob_7"},
+        {MuxKnob_8,                 kKnob,      HIDPin(0,7),    "MuxKnob_8"},
+        {MuxKnob_9,                 kKnob,      HIDPin(0,8),    "MuxKnob_9"},
+        {MuxKnob_10,                kKnob,      HIDPin(0,9),    "MuxKnob_10"},
+        {MuxKnob_11,                kKnob,      HIDPin(0,10),   "MuxKnob_11"},
+        {MuxKnob_12,                kKnob,      HIDPin(0,11),   "MuxKnob_12"},
+        {MuxKnob_13,                kKnob,      HIDPin(0,12),   "MuxKnob_13"},
+        {MuxKnob_14,                kKnob,      HIDPin(0,13),   "MuxKnob_14"},
+        {MuxKnob_15,                kKnob,      HIDPin(0,14),   "MuxKnob_15"},
+        {MuxKnob_16,                kKnob,      HIDPin(0,15),   "MuxKnob_16"},
     
-        {KnobFeedback,          kKnob,      16,           "Feedback"},
-        {KnobTimeRatio,         kKnob,      17,           "TimeRatio"},
-        {KnobBrightness,        kKnob,      18,           "Brightness"},
+        {KnobFeedback,              kKnob,      16,             "Feedback"},
+        {KnobTimeRatio,             kKnob,      17,             "TimeRatio"},
+        {KnobBrightness,            kKnob,      18,             "Brightness"},
     
-        {ButtonPreviousOperator,     kButton,    6, "Previous Map"},
-        {ButtonNextOperator,         kButton,    7, "Next Map"},
-        {ButtonSave,     kButton,    8, "Save"},
-        {ButtonLoad,         kButton,    9, "Load"},
+        {ButtonPreviousOperator,    kButton,    6,              "Previous Map"},
+        {ButtonNextOperator,        kButton,    7,              "Next Map"},
+        {ButtonSave,                kButton,    8,              "Save"},
+        {ButtonLoad,                kButton,    9,              "Load"},
 
-        {MidiLed,         kLed,    10, "Led"},
-    
-        /*{ButtonPreviousPreset, kButton},
-        {ButtonNextPreset, kButton}*/
+        {MidiLed,                   kLed,       10,             "Led"},
      })
 {
     lockAllKnobs();

@@ -5,6 +5,7 @@
 #include "DaisyYMNK/QSPI/PresetManager.h"
 #include "Source/PolyFMCore.h"
 
+
 DaisySeed hw;
 PolyFMCore polyFM;
 DaisyBase db = DaisyBase(&hw, &polyFM);
@@ -139,6 +140,11 @@ void ValueChanged(uint8_t index, float v) {
     }
 }
 
+void InitHID()
+{
+    db.listen();
+}
+
 int main(void)
 {
     db.init(AudioCallback);
@@ -149,6 +155,10 @@ int main(void)
     pm.Init(&hw);
 
     polyFM.setHIDValue(PolyFMCore::MidiLed, 1);
+
+    BlockingAction blocker;
+    blocker.Run(1000, InitHID); //Wait for HID to init
+    //Is it the best solution ? Maybe ?
 
     polyFM.setValueChangedCallback(ValueChanged);
 
