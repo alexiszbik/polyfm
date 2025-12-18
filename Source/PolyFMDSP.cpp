@@ -10,39 +10,39 @@
 
 #include "PolyFMDSP.h"
 
-#define DECLARE_OPERATOR(_name) \
-{Coarse##_name,  xstr(Coarse##_name),   false}, \
-{Fine##_name,    xstr(Fine##_name),     false}, \
-{Mode##_name,    xstr(Mode##_name),     false}, \
-{Attack##_name,  xstr(Attack##_name),   false}, \
-{Decay##_name,   xstr(Decay##_name),    false}, \
-{Sustain##_name, xstr(Sustain##_name),  false}, \
-{Release##_name, xstr(Release##_name),  false}, \
-{Amount##_name,  xstr(Amount##_name),   false}
+#define DECLARE_OPERATOR(_name, _label) \
+{Coarse##_name,  _label " Coarse",   false}, \
+{Fine##_name,    _label " Fine",     false}, \
+{Mode##_name,    _label " Mode",     false}, \
+{Attack##_name,  _label " Attack",   false}, \
+{Decay##_name,   _label " Decay",    false}, \
+{Sustain##_name, _label " Sustain",  false}, \
+{Release##_name, _label " Release",  false}, \
+{Amount##_name,  _label " Amount",   false}
 
-#define DECLARE_LFO(_name) \
-{LfoType##_name,            xstr(LfoType##_name),           false}, \
-{LfoDestination##_name,     xstr(LfoDestination##_name),    false}, \
-{LfoRate##_name,            xstr(LfoRate##_name),           false}, \
-{LfoAmount##_name,          xstr(LfoAmount##_name),         false}
+#define DECLARE_LFO(_name, _label) \
+{LfoType##_name,        _label " Lfo Type",        false}, \
+{LfoDestination##_name, _label " Lfo Destination", false}, \
+{LfoRate##_name,        _label " Lfo Rate",        false}, \
+{LfoAmount##_name,      _label " Lfo Amount",      false}
 
 PolyFMDSP::PolyFMDSP()
 : DSPKernel({
-    {PlayMode,      "PlayMode",     false},
+    {PlayMode,      "Play Mode",     false},
     {Glide,         "Glide",        false},
     {Algorithm,     "Algorithm",    false},
     {Feedback,      "Feedback",     false},
-    {TimeRatio,     "TimeRatio",    false},
+    {TimeRatio,     "Time Ratio",    false},
     {Brightness,    "Brightness",   false},
     {Volume,        "Volume",       false},
     
-    DECLARE_OPERATOR(A),
-    DECLARE_OPERATOR(B),
-    DECLARE_OPERATOR(C),
-    DECLARE_OPERATOR(D),
+    DECLARE_OPERATOR(A,"A"),
+    DECLARE_OPERATOR(B,"B"),
+    DECLARE_OPERATOR(C,"C"),
+    DECLARE_OPERATOR(D,"D"),
     
-    DECLARE_LFO(A),
-    DECLARE_LFO(B),
+    DECLARE_LFO(A,"A"),
+    DECLARE_LFO(B,"B"),
     
     {EnvDestination,    "EnvDestination",   false},
     {EnvAttack,         "EnvAttack",        false},
