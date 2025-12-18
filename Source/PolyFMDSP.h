@@ -109,6 +109,7 @@ private:
     int getOpParam(int operatorId, int aParam);
     int getLfoParam(int lfoId, int aParam);
     float opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min = 0.002f, float max = 2.f);
+    
 private:
     PolySynth synth;
     float timeRatio = 0;

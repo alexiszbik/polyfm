@@ -113,16 +113,8 @@ void savePresetTest() {
 
 void loadPresetTest() {
     const float* dataToLoad = pm.Load();
-    uint8_t k = 16;
-    auto allParam = polyFM.getAllParameters();
-    while (k--) {
-        float v = dataToLoad[k];
-        floatToCString2(v, floatChar);
-        display->WriteNow("Load",allParam.at(k)->getName(), floatChar);
-        System::Delay(200);
-        
-    }
     polyFM.loadPreset(dataToLoad);
+    display->Write("Load Success!");
 }
 
 void ValueChanged(uint8_t index, float v) { 
