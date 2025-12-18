@@ -4,6 +4,7 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="tOCiWl" name="PolyFM">
     <GROUP id="{C0779C41-2005-DAFC-CC4D-A1C1121014A9}" name="DaisyYMNK">
+      <FILE id="jR98hB" name="DaisyYMNK.h" compile="0" resource="0" file="../DaisyYMNK/DaisyYMNK.h"/>
       <GROUP id="{0877EE75-A40A-8042-8EA9-3DD8866AC98A}" name="Common">
         <FILE id="JxZLfS" name="Common.h" compile="0" resource="0" file="../DaisyYMNK/Common/Common.h"/>
         <FILE id="X8FrfU" name="InlineMath.h" compile="0" resource="0" file="../DaisyYMNK/Common/InlineMath.h"/>

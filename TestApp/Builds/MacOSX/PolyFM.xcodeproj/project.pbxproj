@@ -148,6 +148,7 @@
 		42428C01830D7D464B485CB4 /* fir.h */ /* fir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fir.h; path = ../../../DaisySP/Source/Filters/fir.h; sourceTree = SOURCE_ROOT; };
 		455D850F96BE2AC49CF47CF5 /* DSP.h */ /* DSP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DSP.h; path = ../../../DaisyYMNK/DSP/DSP.h; sourceTree = SOURCE_ROOT; };
 		46416BA492F2BE9CAE145DB3 /* phasor.h */ /* phasor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = phasor.h; path = ../../../DaisySP/Source/Control/phasor.h; sourceTree = SOURCE_ROOT; };
+		49BB110607487E1C097A8993 /* DaisyYMNK.h */ /* DaisyYMNK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DaisyYMNK.h; path = ../../../DaisyYMNK/DaisyYMNK.h; sourceTree = SOURCE_ROOT; };
 		4A363246EF915E7282DF6E2F /* variablesawosc.h */ /* variablesawosc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = variablesawosc.h; path = ../../../DaisySP/Source/Synthesis/variablesawosc.h; sourceTree = SOURCE_ROOT; };
 		4C101778E84E1036009B9F57 /* analogbassdrum.h */ /* analogbassdrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = analogbassdrum.h; path = ../../../DaisySP/Source/Drums/analogbassdrum.h; sourceTree = SOURCE_ROOT; };
 		4C9751A4FCE1AF249CC0C697 /* include_juce_core.mm */ /* include_juce_core.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_core.mm; path = ../../JuceLibraryCode/include_juce_core.mm; sourceTree = SOURCE_ROOT; };
@@ -577,6 +578,7 @@
 		8F66B7813749B6779EF4A6F6 /* DaisyYMNK */ = {
 			isa = PBXGroup;
 			children = (
+				49BB110607487E1C097A8993,
 				36E8FD2E50571060B9F10733,
 				003E4EB93C40D59D0D64B3B6,
 			);
