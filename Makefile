@@ -8,6 +8,7 @@ Source/PolyFMCore.cpp \
 Source/PolyFMDSP.cpp \
 Source/PolySynth.cpp \
 Source/SynthVoice.cpp \
+Source/Lfo.cpp \
 DaisyYMNK/Base/DaisyBase.cpp \
 DaisyYMNK/Base/HID.cpp \
 DaisyYMNK/Display/DisplayManager.cpp \

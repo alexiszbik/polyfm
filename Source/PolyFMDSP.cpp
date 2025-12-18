@@ -160,6 +160,21 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         lfo[k].process(frameCount);
     }
     
+    int lfoDest = valueMap(getValue(LfoDestinationA), 0, (int)LfoDest_Count - 1);
+    switch(lfoDest) {
+        case LfoDest_Pitch :
+            break;
+        case LfoDest_Octave :
+            break;
+        case LfoDest_Feedback :
+            break;
+        case LfoDest_Brightness :
+            break;
+        case LfoDest_Timeratio :
+            break;
+            
+    }
+    
     float envAttack = getValue(EnvAttack);
     float envDecay = getValue(EnvDecay);
     
@@ -184,11 +199,12 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         synth.setOperatorAmount(i, getValue(getOpParam(i, AmountA)));
     }
     
-    float volume = getValue(Volume); // should be smoothed ?
+    
      
     for (int i = 0; i < frameCount; i++) {
         updateParameters(); // useless only for smoothed parameters
         
+        float volume = getValue(Volume); 
         synth.setFeedback(getValue(Feedback));
         synth.setBrightness(getValue(Brightness));
         

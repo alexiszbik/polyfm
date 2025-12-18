@@ -83,6 +83,16 @@ public:
         Count
     };
     
+    enum LfoDest {
+        LfoDest_Pitch = 0,
+        LfoDest_Octave,
+        LfoDest_Feedback,
+        LfoDest_Brightness,
+        LfoDest_Timeratio,
+        
+        LfoDest_Count
+    };
+    
 public:
     PolyFMDSP();
     ~PolyFMDSP();

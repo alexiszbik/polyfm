@@ -56,15 +56,23 @@ inline void floatToCString2(float v, char* buf)
 char floatChar[8];
 ydaisy::Parameter* lastParam = nullptr;
 const char* name = nullptr;
-int opIdx = -1;
+int pageIdx = -1;
 
 EveryMs displayTimer(5, [](){
 
     auto lastChanged = polyFM.getLastChangedParameter();
-    int newOpIdx = polyFM.getCurrentOpIdx();
-    if (opIdx != newOpIdx) {
-        opIdx = newOpIdx;
-        display->WriteLine(0, opIdx == 0 ? "OP A / OP B" : "OP C / OP D");
+    int newPageIdx = polyFM.getCurrentPage();
+    
+    if (pageIdx != newPageIdx) {
+        pageIdx = newPageIdx;
+        const char* pageName = "OP A / OP B";
+        if (pageIdx == 1) {
+            pageName = "OP C / OP D";
+        } else if (pageIdx == 2) {
+            pageName = "Globals";
+        }
+        
+        display->WriteLine(0, pageName);
     }
     
     if (lastChanged && lastChanged != lastParam)
@@ -86,13 +94,6 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, s
 {
     db.process(out, size);
 }
-
-bool isInit = false;
-
-/*
-#define WAVE_LENGTH 64
-float DSY_QSPI_BSS qspi_buffer[WAVE_LENGTH];
-float wavform_ram[WAVE_LENGTH];*/
 
 void savePresetTest() {
     float pData[64];
@@ -127,15 +128,12 @@ void loadPresetTest() {
 void ValueChanged(uint8_t index, float v) { 
     if (v == 1.0) {
         if (index == PolyFMCore::ButtonSave) {
-            if (isInit) {
-                display->Write("Save");
-                savePresetTest();
-            }
+            display->Write("Save");
+            savePresetTest();
            
         } else if (index == PolyFMCore::ButtonLoad) {
             display->Write("Load");
             loadPresetTest();
-            isInit = true;
         }
     }
 }

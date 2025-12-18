@@ -44,7 +44,7 @@ public:
         MuxKnob_15,
         MuxKnob_16,
         
-        KnobFeedback,
+        KnobVolume,
         KnobTimeRatio,
         KnobBrightness,
         
@@ -58,7 +58,7 @@ public:
 public:
     PolyFMCore();
 
-    int getCurrentOpIdx();
+    int getCurrentPage();
     void loadPreset(const float* values);
 
     virtual void processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) override;
@@ -68,26 +68,26 @@ protected:
     
 private:
     void lockAllKnobs();
-    void setCurrentOperators(unsigned int opIndex);
+    void setCurrentPage(unsigned int opIndex);
     
 private:
     vector<int> parameterMap = {
-        PolyFMDSP::Feedback,
+        PolyFMDSP::Volume,
         PolyFMDSP::TimeRatio,
         PolyFMDSP::Brightness,
     };
     
-    vector<vector<int>> opParameterMap = {
+    vector<vector<int>> pages = {
         {DSP_PARAM_OP(A), DSP_PARAM_OP(B)},
         {DSP_PARAM_OP(C), DSP_PARAM_OP(D)},
         {
             PolyFMDSP::PlayMode, PolyFMDSP::Glide,    PolyFMDSP::Algorithm,  PolyFMDSP::Feedback,
-            PolyFMDSP::Feedback, PolyFMDSP::Feedback, PolyFMDSP::Brightness, PolyFMDSP::Feedback,
-            PolyFMDSP::Feedback, PolyFMDSP::Feedback, PolyFMDSP::Brightness, PolyFMDSP::Feedback,
-            PolyFMDSP::Feedback, PolyFMDSP::Feedback, PolyFMDSP::Brightness, PolyFMDSP::Feedback
+            PolyFMDSP::LfoTypeA, PolyFMDSP::LfoRateA, PolyFMDSP::LfoAmountA, PolyFMDSP::LfoDestinationA,
+            PolyFMDSP::LfoTypeB, PolyFMDSP::LfoRateB, PolyFMDSP::LfoAmountB, PolyFMDSP::LfoDestinationB,
+            PolyFMDSP::EnvAttack, PolyFMDSP::EnvDecay, PolyFMDSP::EnvAmount, PolyFMDSP::EnvDestination
         }
     };
     
-    int currentOpsIndex = 0;
+    int currentPage = 0;
 
 };

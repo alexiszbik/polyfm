@@ -30,7 +30,7 @@ PolyFMCore::PolyFMCore()
         {MuxKnob_15,                kKnob,      HIDPin(0,14),   "MuxKnob_15"},
         {MuxKnob_16,                kKnob,      HIDPin(0,15),   "MuxKnob_16"},
     
-        {KnobFeedback,              kKnob,      16,             "Feedback"},
+        {KnobVolume,                kKnob,      16,             "Volume"},
         {KnobTimeRatio,             kKnob,      17,             "TimeRatio"},
         {KnobBrightness,            kKnob,      18,             "Brightness"},
     
@@ -56,22 +56,22 @@ void PolyFMCore::loadPreset(const float* values) {
     lockAllKnobs();
 }
 
-int PolyFMCore::getCurrentOpIdx() {
-    return currentOpsIndex;
+int PolyFMCore::getCurrentPage() {
+    return currentPage;
 }
 
-void PolyFMCore::setCurrentOperators(unsigned int opIndex) {
-    currentOpsIndex = opIndex;
+void PolyFMCore::setCurrentPage(unsigned int opIndex) {
+    currentPage = opIndex;
     
-    const int opSize = SynthVoice::kOperatorCount / 2;
-    if (currentOpsIndex < 0) {
-        currentOpsIndex = (int)opSize - 1;
+    const int pageCount = (int)pages.size();
+    if (currentPage < 0) {
+        currentPage = (int)pageCount - 1;
     } else {
-        currentOpsIndex = currentOpsIndex % opSize;
+        currentPage = currentPage % pageCount;
     }
     
 #if defined _SIMULATOR_
-    std::cout << currentOpsIndex << std::endl;
+    std::cout << currentPage << std::endl;
 #endif
     lockAllKnobs();
 }
@@ -91,14 +91,14 @@ void PolyFMCore::processMIDI(MIDIMessageType messageType, int channel, int dataA
 
 void PolyFMCore::updateHIDValue(unsigned int index, float value) {
 
-    auto currentOpMap = &opParameterMap.at(currentOpsIndex);
+    auto currentOpMap = &pages.at(currentPage);
     switch (index) {
         case ButtonPreviousOperator:
-            setCurrentOperators(currentOpsIndex - 1);
+            setCurrentPage(currentPage - 1);
             break;
             
         case ButtonNextOperator:
-            setCurrentOperators(currentOpsIndex + 1);
+            setCurrentPage(currentPage + 1);
             break;
             
         case MidiLed:
