@@ -51,6 +51,34 @@ inline void floatToCString2(float v, char* buf)
     *buf = '\0';
 }
 
+// buffer minimum 4 chars -> "-99\0"
+inline void intToCString2(int v, char* buf)
+{
+    char* p = buf;
+
+    // gestion du signe
+    if(v < 0)
+    {
+        *p++ = '-';
+        v = -v;
+    }
+
+    // limiter à 2 chiffres
+    if(v > 99)
+        v = 99;
+
+    // conversion des dizaines
+    if(v >= 10)
+    {
+        *p++ = '0' + (v / 10);
+    }
+
+    // conversion des unités
+    *p++ = '0' + (v % 10);
+
+    // terminaison de la chaîne
+    *p = '\0';
+}
 
 
 char floatChar[8];
@@ -95,6 +123,8 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, s
     db.process(out, size);
 }
 
+int currentPreset = 0;
+
 void savePresetTest() {
     float pData[64];
     auto allParam = polyFM.getAllParameters();
@@ -103,7 +133,7 @@ void savePresetTest() {
         pData[k++] = param->getUIValue();
     }
 
-    bool result = pm.Save(pData, k);
+    bool result = pm.Save(pData, k, currentPreset);
     if (result) {
         display->Write("Save Success!");
     } else {
@@ -111,10 +141,13 @@ void savePresetTest() {
     }
 }
 
-void loadPresetTest() {
-    const float* dataToLoad = pm.Load();
-    polyFM.loadPreset(dataToLoad);
-    display->Write("Load Success!");
+void loadPresetTest(int index) {
+    const float* dataToLoad = pm.Load(index);
+    if (dataToLoad) {
+        polyFM.loadPreset(dataToLoad);
+    }
+    intToCString2(index, floatChar);
+    display->Write("Load Preset", floatChar);
 }
 
 void ValueChanged(uint8_t index, float v) { 
@@ -123,9 +156,22 @@ void ValueChanged(uint8_t index, float v) {
             display->Write("Save");
             savePresetTest();
            
-        } else if (index == PolyFMCore::ButtonLoad) {
-            display->Write("Load");
-            loadPresetTest();
+        } else if (index == PolyFMCore::ButtonNextPreset) {
+            
+            currentPreset = currentPreset + 1;
+            currentPreset = currentPreset % MAX_PRESETS;
+
+            
+            loadPresetTest(currentPreset);
+            //loadPresetTest();
+        } else if (index == PolyFMCore::ButtonPreviousPreset) {
+            currentPreset = currentPreset - 1;
+            if (currentPreset < 0) {
+                currentPreset = MAX_PRESETS - 1;
+            }
+
+            loadPresetTest(currentPreset);
+            //loadPresetTest();
         }
     }
 }

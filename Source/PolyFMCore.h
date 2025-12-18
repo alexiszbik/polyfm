@@ -50,8 +50,9 @@ public:
         
         ButtonPreviousOperator,
         ButtonNextOperator,
+        ButtonPreviousPreset,
+        ButtonNextPreset,
         ButtonSave,
-        ButtonLoad,
 
         MidiLed
     };

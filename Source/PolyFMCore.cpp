@@ -34,10 +34,11 @@ PolyFMCore::PolyFMCore()
         {KnobTimeRatio,             kKnob,      17,             "TimeRatio"},
         {KnobBrightness,            kKnob,      18,             "Brightness"},
     
+        {ButtonSave,                kButton,    5,              "Button Save"},
         {ButtonPreviousOperator,    kButton,    6,              "Previous Map"},
         {ButtonNextOperator,        kButton,    7,              "Next Map"},
-        {ButtonSave,                kButton,    8,              "Save"},
-        {ButtonLoad,                kButton,    9,              "Load"},
+        {ButtonPreviousPreset,      kButton,    8,              "Previous Preset"},
+        {ButtonNextPreset,          kButton,    9,              "Next Preset"},
 
         {MidiLed,                   kLed,       10,             "Led"},
      })
@@ -103,7 +104,8 @@ void PolyFMCore::updateHIDValue(unsigned int index, float value) {
             
         case MidiLed:
         case ButtonSave:
-        case ButtonLoad:
+        case ButtonNextPreset:
+        case ButtonPreviousPreset:
             break;
             
         default:
