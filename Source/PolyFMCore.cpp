@@ -9,6 +9,7 @@
 */
 
 #include "PolyFMCore.h"
+#include "DaisyYMNK/Helpers/StrConverters.h"
 
 PolyFMCore::PolyFMCore()
 : ModuleCore(new PolyFMDSP(),
@@ -58,23 +59,35 @@ void PolyFMCore::loadPreset(const float* values) {
 }
 
 int PolyFMCore::getCurrentPage() {
-    return currentPage;
+    return currentPage.get();
 }
 
-void PolyFMCore::setCurrentPage(unsigned int opIndex) {
-    currentPage = opIndex;
-    
-    const int pageCount = (int)pages.size();
-    if (currentPage < 0) {
-        currentPage = (int)pageCount - 1;
+void PolyFMCore::changeCurrentPage(bool increment) {
+    if (increment) {
+        currentPage.increment();
     } else {
-        currentPage = currentPage % pageCount;
+        currentPage.decrement();
     }
     
 #if defined _SIMULATOR_
-    std::cout << currentPage << std::endl;
+    std::cout << currentPage.get() << std::endl;
 #endif
     lockAllKnobs();
+}
+
+void PolyFMCore::changeCurrentPreset(bool increment) {
+    if (increment) {
+        currentPreset.increment();
+    } else {
+        currentPreset.decrement();
+    }
+    
+    const float* dataToLoad = presetManager->Load(currentPreset.get());
+    if (dataToLoad) {
+        loadPreset(dataToLoad);
+    }
+    intToCString2(currentPreset.get(), numCharBuffer);
+    displayManager->Write("Load Preset", numCharBuffer);
 }
 
 bool isBetweenParameterIndex(int x, int a, int b) {
@@ -92,20 +105,26 @@ void PolyFMCore::processMIDI(MIDIMessageType messageType, int channel, int dataA
 
 void PolyFMCore::updateHIDValue(unsigned int index, float value) {
 
-    auto currentOpMap = &pages.at(currentPage);
+    auto currentOpMap = &pages.at(currentPage.get());
     switch (index) {
         case ButtonPreviousOperator:
-            setCurrentPage(currentPage - 1);
+            changeCurrentPage(false);
             break;
             
         case ButtonNextOperator:
-            setCurrentPage(currentPage + 1);
+            changeCurrentPage(true);
             break;
             
         case MidiLed:
         case ButtonSave:
-        case ButtonNextPreset:
+            break;
+            
         case ButtonPreviousPreset:
+            changeCurrentPreset(false);
+            break;
+            
+        case ButtonNextPreset:
+            changeCurrentPreset(true);
             break;
             
         default:

@@ -11,6 +11,7 @@
 #pragma once
 
 #include "DaisyYMNK/DSP/DSP.h"
+#include "DaisyYMNK/Helpers/BoundedInt.h"
 #include "PolyFMDSP.h"
 
 #define DSP_PARAM_OP(_name) \
@@ -22,7 +23,6 @@ PolyFMDSP::Attack##_name, \
 PolyFMDSP::Decay##_name, \
 PolyFMDSP::Sustain##_name, \
 PolyFMDSP::Release##_name
-
 
 class PolyFMCore : public ModuleCore {
 public:
@@ -48,12 +48,12 @@ public:
         KnobTimeRatio,
         KnobBrightness,
         
+        ButtonSave,
         ButtonPreviousOperator,
         ButtonNextOperator,
         ButtonPreviousPreset,
         ButtonNextPreset,
-        ButtonSave,
-
+        
         MidiLed
     };
 public:
@@ -69,7 +69,8 @@ protected:
     
 private:
     void lockAllKnobs();
-    void setCurrentPage(unsigned int opIndex);
+    void changeCurrentPage(bool increment);
+    void changeCurrentPreset(bool increment);
     
 private:
     vector<int> parameterMap = {
@@ -89,6 +90,9 @@ private:
         }
     };
     
-    int currentPage = 0;
+    BoundedInt<0,2> currentPage = 0;
+    BoundedInt<0,15> currentPreset = 0;
+    
+    char numCharBuffer[8];
 
 };

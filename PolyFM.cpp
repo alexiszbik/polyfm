@@ -13,8 +13,8 @@ using namespace ydaisy;
 DaisySeed hw;
 PolyFMCore polyFM;
 DaisyBase db = DaisyBase(&hw, &polyFM);
-PresetManager pm;
 
+PresetManager pm;
 DisplayManager *display = DisplayManager::GetInstance();
 
 char floatChar[8];
@@ -76,7 +76,7 @@ void savePreset() {
         display->Write("Save Failed!");
     }
 }
-
+/*
 void loadPreset(int index) {
     const float* dataToLoad = pm.Load(index);
     if (dataToLoad) {
@@ -84,7 +84,7 @@ void loadPreset(int index) {
     }
     intToCString2(index, floatChar);
     display->Write("Load Preset", floatChar);
-}
+}*/
 
 void ValueChanged(uint8_t index, float v) { 
     if (v == 1.0) {
@@ -92,7 +92,7 @@ void ValueChanged(uint8_t index, float v) {
             display->Write("Save");
             savePreset();
            
-        } else if (index == PolyFMCore::ButtonNextPreset) {
+        } /*else if (index == PolyFMCore::ButtonNextPreset) {
             currentPreset = (currentPreset + 1) % MAX_PRESETS;
             loadPreset(currentPreset);
         } else if (index == PolyFMCore::ButtonPreviousPreset) {
@@ -101,7 +101,7 @@ void ValueChanged(uint8_t index, float v) {
                 currentPreset = MAX_PRESETS - 1;
             }
             loadPreset(currentPreset);
-        }
+        }*/
     }
 }
 
@@ -118,6 +118,9 @@ int main(void)
     display->WriteNow("YMNK", "PolyFM Synth");
 
     pm.Init(&hw);
+
+    db.setDisplayManager(display);
+    db.setPresetManager(&pm);
 
     polyFM.setHIDValue(PolyFMCore::MidiLed, 1);
 
