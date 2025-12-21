@@ -131,10 +131,6 @@ int PolyFMDSP::getOpParam(int operatorId, int aParam) {
     static int opParamCount = (AmountA - CoarseA) + 1;
     return (operatorId * opParamCount) + aParam;
 }
-/*
-float PolyFMDSP::opIimeValue(int operatorId, int aParam, float min, float max) {
-    return valueMap(getValue(getOpParam(operatorId, aParam)), min, max);
-}*/
 
 float PolyFMDSP::opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min, float max) {
     float val = getValue(getOpParam(operatorId, aParam));

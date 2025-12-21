@@ -71,6 +71,7 @@ private:
     void lockAllKnobs();
     void changeCurrentPage(bool increment);
     void changeCurrentPreset(bool increment);
+    void saveCurrentPreset();
     
 private:
     vector<int> parameterMap = {

@@ -11,6 +11,10 @@
 #include "PolyFMCore.h"
 #include "DaisyYMNK/Helpers/StrConverters.h"
 
+bool isBetweenParameterIndex(int x, int a, int b) {
+    return x >= a && x <= b;
+}
+
 PolyFMCore::PolyFMCore()
 : ModuleCore(new PolyFMDSP(),
      {
@@ -69,7 +73,7 @@ void PolyFMCore::changeCurrentPage(bool increment) {
         currentPage.decrement();
     }
     
-#if defined _SIMULATOR_
+#if defined _SIMULATOR_ //TODO : move this into a display simulator
     std::cout << currentPage.get() << std::endl;
 #endif
     lockAllKnobs();
@@ -90,8 +94,20 @@ void PolyFMCore::changeCurrentPreset(bool increment) {
     displayManager->Write("Load Preset", numCharBuffer);
 }
 
-bool isBetweenParameterIndex(int x, int a, int b) {
-    return x >= a && x <= b;
+void PolyFMCore::saveCurrentPreset() {
+    float pData[MAX_PRESET_SIZE];
+    auto allParam = getAllParameters();
+    uint8_t k = 0;
+    for (auto& param : allParam) {
+        pData[k++] = param->getUIValue();
+    }
+
+    bool result = presetManager->Save(pData, k, currentPreset.get());
+    if (result) {
+        displayManager->Write("Save Success!");
+    } else {
+        displayManager->Write("Save Failed!");
+    }
 }
 
 void PolyFMCore::processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) {
@@ -115,8 +131,8 @@ void PolyFMCore::updateHIDValue(unsigned int index, float value) {
             changeCurrentPage(true);
             break;
             
-        case MidiLed:
         case ButtonSave:
+            saveCurrentPreset();
             break;
             
         case ButtonPreviousPreset:
@@ -125,6 +141,10 @@ void PolyFMCore::updateHIDValue(unsigned int index, float value) {
             
         case ButtonNextPreset:
             changeCurrentPreset(true);
+            break;
+            
+        case MidiLed:
+            //Hmmm, this should never happen
             break;
             
         default:
