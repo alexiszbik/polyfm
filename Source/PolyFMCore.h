@@ -72,6 +72,8 @@ private:
     void changeCurrentPage(bool increment);
     void changeCurrentPreset(bool increment);
     void saveCurrentPreset();
+    void displayLastParameterOnScreen();
+    void displayPageOnScreen();
     
 private:
     vector<int> parameterMap = {
@@ -95,5 +97,6 @@ private:
     BoundedInt<0,15> currentPreset = 0;
     
     char numCharBuffer[8];
-
+    
+    ydaisy::Parameter* lastParam = nullptr;
 };

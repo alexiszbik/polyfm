@@ -77,6 +77,7 @@ void PolyFMCore::changeCurrentPage(bool increment) {
     std::cout << currentPage.get() << std::endl;
 #endif
     lockAllKnobs();
+    displayPageOnScreen();
 }
 
 void PolyFMCore::changeCurrentPreset(bool increment) {
@@ -107,6 +108,34 @@ void PolyFMCore::saveCurrentPreset() {
         displayManager->Write("Save Success!");
     } else {
         displayManager->Write("Save Failed!");
+    }
+}
+
+void PolyFMCore::displayPageOnScreen() {
+    int pageIdx = currentPage.get();
+    const char* pageName = "OP A / OP B";
+    if (pageIdx == 1) {
+        pageName = "OP C / OP D";
+    } else if (pageIdx == 2) {
+        pageName = "Globals";
+    }
+    
+    displayManager->WriteLine(0, pageName);
+}
+
+void PolyFMCore::displayLastParameterOnScreen() {
+    auto lastChanged = dspKernel->getLastChangedParameter();
+    
+    if (lastChanged && lastChanged != lastParam) {
+        const char* name = lastChanged->getName();
+        lastParam = lastChanged;
+        displayManager->WriteLine(1, name);
+    }
+
+    if (lastChanged) {
+        float value = lastChanged->getUIValue();
+        floatToCString2(value, numCharBuffer);
+        displayManager->WriteLine(2, numCharBuffer);
     }
 }
 
@@ -153,6 +182,8 @@ void PolyFMCore::updateHIDValue(unsigned int index, float value) {
             } else {
                 dspKernel->setParameterValue(parameterMap.at(index - MuxKnob_16 - 1), value);
             }
+            displayLastParameterOnScreen();
+            
             break;
     }
 }

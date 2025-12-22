@@ -16,43 +16,6 @@ DaisyBase db = DaisyBase(&hw, &polyFM);
 PresetManager pm;
 DisplayManager *display = DisplayManager::GetInstance();
 
-char floatChar[8];
-ydaisy::Parameter* lastParam = nullptr;
-const char* name = nullptr;
-int pageIdx = -1;
-
-EveryMs displayTimer(5, [](){
-
-    auto lastChanged = polyFM.getLastChangedParameter();
-    int newPageIdx = polyFM.getCurrentPage();
-    
-    if (pageIdx != newPageIdx) {
-        pageIdx = newPageIdx;
-        const char* pageName = "OP A / OP B";
-        if (pageIdx == 1) {
-            pageName = "OP C / OP D";
-        } else if (pageIdx == 2) {
-            pageName = "Globals";
-        }
-        
-        display->WriteLine(0, pageName);
-    }
-    
-    if (lastChanged && lastChanged != lastParam)
-    {
-        name = lastChanged->getName();
-        lastParam = lastChanged;
-        display->WriteLine(1, name);
-    }
-
-    if (lastChanged && name)
-    {
-        float value = lastChanged->getUIValue();
-        floatToCString2(value, floatChar);
-        display->WriteLine(2, floatChar);
-    }
-});
-
 void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     db.process(out, size);
@@ -84,7 +47,6 @@ int main(void)
     for(;;)
     {
         db.listen();
-        displayTimer.Update();
         display->Update();
     }
     
