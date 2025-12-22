@@ -102,11 +102,15 @@ public:
     virtual void process(float** buf, int frameCount) override;
     virtual void processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) override;
     
+    int getOpParam(int operatorId, int aParam);
+    bool isOpParameter(int index);
+    int getOpParameterForA(int index);
+    int getOperatorForIndex(int index);
+    
 protected:
     virtual void updateParameter(int index, float value) override;
     
 private:
-    int getOpParam(int operatorId, int aParam);
     int getLfoParam(int lfoId, int aParam);
     float opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min = 0.002f, float max = 2.f);
     

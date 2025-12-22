@@ -72,6 +72,7 @@ private:
     void changeCurrentPage(bool increment);
     void changeCurrentPreset(bool increment);
     void saveCurrentPreset();
+    
     void displayLastParameterOnScreen();
     void displayPageOnScreen();
     
@@ -96,7 +97,12 @@ private:
     BoundedInt<0,2> currentPage = 0;
     BoundedInt<0,15> currentPreset = 0;
     
-    char numCharBuffer[8];
+    char numCharBuffer[4];
+    char fullNumCharBuffer[20];
     
     ydaisy::Parameter* lastParam = nullptr;
+    
+    bool needsResetDisplay = false;
+    
+    PolyFMDSP polyFm;
 };

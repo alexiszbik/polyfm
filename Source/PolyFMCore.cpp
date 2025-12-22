@@ -16,7 +16,7 @@ bool isBetweenParameterIndex(int x, int a, int b) {
 }
 
 PolyFMCore::PolyFMCore()
-: ModuleCore(new PolyFMDSP(),
+: ModuleCore(&polyFm,
      {
         {MuxKnob_1,                 kKnob,      HIDPin(0,0),    "MuxKnob_1"},
         {MuxKnob_2,                 kKnob,      HIDPin(0,1),    "MuxKnob_2"},
@@ -49,6 +49,8 @@ PolyFMCore::PolyFMCore()
      })
 {
     lockAllKnobs();
+    
+    needsResetDisplay = true;
 }
 
 void PolyFMCore::lockAllKnobs() {
@@ -93,6 +95,7 @@ void PolyFMCore::changeCurrentPreset(bool increment) {
     }
     intToCString2(currentPreset.get(), numCharBuffer);
     displayManager->Write("Load Preset", numCharBuffer);
+    needsResetDisplay = true;
 }
 
 void PolyFMCore::saveCurrentPreset() {
@@ -109,6 +112,7 @@ void PolyFMCore::saveCurrentPreset() {
     } else {
         displayManager->Write("Save Failed!");
     }
+    needsResetDisplay = true;
 }
 
 void PolyFMCore::displayPageOnScreen() {
@@ -119,12 +123,17 @@ void PolyFMCore::displayPageOnScreen() {
     } else if (pageIdx == 2) {
         pageName = "Globals";
     }
-    
     displayManager->WriteLine(0, pageName);
 }
 
 void PolyFMCore::displayLastParameterOnScreen() {
-    auto lastChanged = dspKernel->getLastChangedParameter();
+    auto lastChangedIdx = dspKernel->getLastChangedParameterIndex();
+    Parameter* lastChanged = dspKernel->getParameter(lastChangedIdx);
+    
+    if (needsResetDisplay) {
+        needsResetDisplay = false;
+        displayPageOnScreen();
+    }
     
     if (lastChanged && lastChanged != lastParam) {
         const char* name = lastChanged->getName();
@@ -133,9 +142,45 @@ void PolyFMCore::displayLastParameterOnScreen() {
     }
 
     if (lastChanged) {
-        float value = lastChanged->getUIValue();
-        floatToCString2(value, numCharBuffer);
-        displayManager->WriteLine(2, numCharBuffer);
+        
+        int paramA = polyFm.getOpParameterForA(lastChangedIdx);
+        
+        if (paramA >= 0) {
+            int pos = 0;
+            static constexpr uint8_t cSize = 3;
+            
+            float valueA = dspKernel->getParameter(paramA)->getUIValue();
+            floatToCStringPct3(valueA, numCharBuffer);
+            
+            memcpy(fullNumCharBuffer + pos, numCharBuffer, cSize);
+            pos += cSize;
+        
+            fullNumCharBuffer[pos++] = ' ';
+            
+            for (uint8_t o = 1; o < 4; o++) {
+                int param = polyFm.getOpParam(o, paramA);
+                float val = dspKernel->getParameter(param)->getUIValue();
+                floatToCStringPct3(val, numCharBuffer);
+                
+                memcpy(fullNumCharBuffer + pos, numCharBuffer, cSize);
+                pos += cSize;
+            
+                if (o < 3) {
+                    fullNumCharBuffer[pos++] = ' ';
+                }
+            }
+            
+            fullNumCharBuffer[pos] = '\0';
+            
+            //std::cout << fullNumCharBuffer << std::endl;
+            displayManager->WriteLine(2, fullNumCharBuffer);
+         
+        } else {
+            float value = lastChanged->getUIValue();
+            floatToCString2(value, numCharBuffer);
+            
+            displayManager->WriteLine(2, numCharBuffer);
+        }
     }
 }
 

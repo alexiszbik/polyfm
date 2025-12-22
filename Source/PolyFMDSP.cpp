@@ -132,6 +132,33 @@ int PolyFMDSP::getOpParam(int operatorId, int aParam) {
     return (operatorId * opParamCount) + aParam;
 }
 
+bool PolyFMDSP::isOpParameter(int index) {
+    return index >= CoarseA && index <= AmountD;
+}
+
+int PolyFMDSP::getOpParameterForA(int index) {
+    int op = getOperatorForIndex(index);
+    static int opParamCount = (AmountA - CoarseA) + 1;
+    if (op >= 0) {
+        return index - opParamCount*op;
+    }
+    return -1;
+}
+
+int PolyFMDSP::getOperatorForIndex(int index) {
+    if (index > AmountD) {
+        return -1;
+    }
+    uint8_t k = 3;
+    for (int opLast : {CoarseD, CoarseC, CoarseB, CoarseA}) {
+        if (index >= opLast) {
+            return k;
+        }
+        k--;
+    }
+    return -1;
+}
+
 float PolyFMDSP::opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min, float max) {
     float val = getValue(getOpParam(operatorId, aParam));
     val *= val;
@@ -209,7 +236,7 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         
         float out = synth.process() * volume;
        
-        buf[0][i] = out * 0.2;
+        buf[0][i] = out * 0.15;
         for (int channel = 1; channel < channelCount; channel++) {
             buf[channel][i] = buf[0][i];
         }
