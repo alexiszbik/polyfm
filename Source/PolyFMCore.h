@@ -76,6 +76,9 @@ private:
     void displayLastParameterOnScreen();
     void displayPageOnScreen();
     
+public:
+    void displayValuesOnScreen();
+    
 private:
     vector<int> parameterMap = {
         PolyFMDSP::Volume,
@@ -101,6 +104,9 @@ private:
     char fullNumCharBuffer[20];
     
     ydaisy::Parameter* lastParam = nullptr;
+    int lastParamIndex = 0;
+    int paramA = 0;
+    bool needsToUpdateValue = false;
     
     bool needsResetDisplay = false;
     

@@ -26,6 +26,10 @@ void InitHID()
     db.listen();
 }
 
+void UpdateValues() {
+    polyFM.displayValuesOnScreen();
+}
+
 int main(void)
 {
     db.init(AudioCallback);
@@ -44,9 +48,12 @@ int main(void)
     blocker.Run(1000, InitHID); //Wait for HID to init
     //Is it the best solution ? Maybe ?
 
+    EveryMs displayValuesUpdater (4, UpdateValues);
+
     for(;;)
     {
         db.listen();
+        displayValuesUpdater.Update();
         display->Update();
     }
     

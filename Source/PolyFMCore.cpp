@@ -126,24 +126,13 @@ void PolyFMCore::displayPageOnScreen() {
     displayManager->WriteLine(0, pageName);
 }
 
-void PolyFMCore::displayLastParameterOnScreen() {
-    auto lastChangedIdx = dspKernel->getLastChangedParameterIndex();
-    Parameter* lastChanged = dspKernel->getParameter(lastChangedIdx);
+void PolyFMCore::displayValuesOnScreen() {
     
-    if (needsResetDisplay) {
-        needsResetDisplay = false;
-        displayPageOnScreen();
+    if (!needsToUpdateValue) {
+        return;
     }
     
-    if (lastChanged && lastChanged != lastParam) {
-        const char* name = lastChanged->getName();
-        lastParam = lastChanged;
-        displayManager->WriteLine(1, name);
-    }
-
-    if (lastChanged) {
-        
-        int paramA = polyFm.getOpParameterForA(lastChangedIdx);
+    if (lastParam) {
         
         if (paramA >= 0) {
             int pos = 0;
@@ -172,16 +161,38 @@ void PolyFMCore::displayLastParameterOnScreen() {
             
             fullNumCharBuffer[pos] = '\0';
             
-            //std::cout << fullNumCharBuffer << std::endl;
             displayManager->WriteLine(2, fullNumCharBuffer);
          
         } else {
-            float value = lastChanged->getUIValue();
+            float value = lastParam->getUIValue();
             floatToCString2(value, numCharBuffer);
             
             displayManager->WriteLine(2, numCharBuffer);
         }
     }
+    
+    needsToUpdateValue = false;
+}
+
+//Well we should make a loop again
+void PolyFMCore::displayLastParameterOnScreen() {
+    lastParamIndex = dspKernel->getLastChangedParameterIndex();
+    Parameter* lastChanged = dspKernel->getParameter(lastParamIndex);
+    
+    if (needsResetDisplay) {
+        needsResetDisplay = false;
+        displayPageOnScreen();
+    }
+    
+    if (lastChanged && lastChanged != lastParam) {
+        const char* name = lastChanged->getName();
+        lastParam = lastChanged;
+        displayManager->WriteLine(1, name);
+        paramA = polyFm.getOpParameterForA(lastParamIndex);
+    }
+    
+    needsToUpdateValue = true;
+
 }
 
 void PolyFMCore::processMIDI(MIDIMessageType messageType, int channel, int dataA, int dataB) {
