@@ -213,15 +213,26 @@ void PolyFMDSP::process(float** buf, int frameCount) {
                               opTimeValue(i, SustainA, false, 0.001, 1),
                               opTimeValue(i, ReleaseA, true));
         
-        float ratio = valueMap(getValue(getOpParam(i, CoarseA)), 0, 16);
-        if (ratio == 0) {
-            ratio = 0.5;
-        }
+        bool useFixedFreq = getValue(getOpParam(i, ModeA)) > 0.5f;
+        synth.setOperatorMode(i, useFixedFreq);
         
-        synth.setOperatorRatio(i, ratio * (getValue(getOpParam(i, FineA)) + 1));
+        if (useFixedFreq) {
+            float fixFreq = valueMap(getValue(getOpParam(i, CoarseA)), 10.f, 2000.f);
+            constexpr float multipliers[] = { 0.001f, 0.01f, 0.1f, 1.f, 10.f };
+
+            uint8_t idx = valueMap(getValue(getOpParam(i, FineA)), 0, 4);
+            float multiplier = multipliers[idx];
+            synth.setOperatorFixFreq(i, fixFreq * multiplier);
+        } else {
+            float ratio = valueMap(getValue(getOpParam(i, CoarseA)), 0, 16);
+            if (ratio == 0) {
+                ratio = 0.5;
+            }
+            
+            synth.setOperatorRatio(i, ratio * (getValue(getOpParam(i, FineA)) + 1));
+        }
         synth.setOperatorAmount(i, getValue(getOpParam(i, AmountA)));
     }
-    
     
      
     for (int i = 0; i < frameCount; i++) {

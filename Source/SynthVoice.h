@@ -22,15 +22,28 @@ using namespace daisysp;
 //using namespace ydaisy;
 
 class SynthVoice {
+private:
+    
+    struct Operator {
+        Adsr adsr;
+        float ratio = 1;
+        float amount = 1;
+        float phase = 0;
+        float fixFreq = 1000;
+        bool useFixedFreq = false;
+    };
+    
 public:
     void init(double sampleRate);
     
-    void processPhase(float* phase, float ratio);
+    void processPhase(Operator* op);
     
     void setGlide(float glide);
     
     void setOperatorRatio(int operatorId, float ratio);
     void setOperatorAmount(int operatorId, float amount);
+    void setOperatorMode(int operatorId, bool mode);
+    void setOperatorFixFrequency(int operatorId, float fixedFreq);
     void setOperatorADSR(int operatorId, float attack, float decay, float sustain, float release);
     void setFeedback(float feedbackAmount);
     void setAlgorithm(int index);
@@ -66,13 +79,6 @@ private:
     double sampleRate;
     
     float glide = 0;
-    
-    struct Operator {
-        Adsr adsr;
-        float ratio = 1;
-        float amount = 1;
-        float phase = 0;
-    };
     
     float opOut[kOperatorCount] = {0,0,0,0};
 

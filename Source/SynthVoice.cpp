@@ -49,9 +49,10 @@ void SynthVoice::setNoteOff() {
     setGate(false);
 }
 
-void SynthVoice::processPhase(float* phase, float ratio) {
-    *phase += phaseInc * freq * ratio;
-    *phase = fmod(*phase, 1.0);
+void SynthVoice::processPhase(Operator* op) {
+    float f = op->useFixedFreq ? op->fixFreq : freq;
+    op->phase += phaseInc * f * op->ratio;
+    op->phase = fmod(op->phase, 1.0);
 }
 
 void SynthVoice::setGlide(float glide) {
@@ -64,6 +65,14 @@ void SynthVoice::setOperatorRatio(int operatorId, float ratio) {
 
 void SynthVoice::setOperatorAmount(int operatorId, float amount) {
     op[operatorId].amount = amount;
+}
+
+void SynthVoice::setOperatorMode(int operatorId, bool mode) {
+    op[operatorId].useFixedFreq = mode;
+}
+
+void SynthVoice::setOperatorFixFrequency(int operatorId, float fixFreq) {
+    op[operatorId].fixFreq = fixFreq;
 }
 
 void SynthVoice::setOperatorADSR(int operatorId, float attack, float decay, float sustain, float release) {
@@ -103,7 +112,7 @@ float SynthVoice::process() {
     
     for (int i = kOperatorCount - 1; i >= 0; i--) {
         Operator* o = &op[i];
-        processPhase(&o->phase, o->ratio);
+        processPhase(o);
         
         float modulator = 0;
         

@@ -159,10 +159,25 @@ void PolySynth::setOperatorRatio(int operatorId, float ratio) {
     }
 }
 
+
+void PolySynth::setOperatorFixFreq(int operatorId, float fixFreq) {
+    for (auto v : voices)
+    {
+        v->setOperatorFixFrequency(operatorId, fixFreq);
+    }
+}
+
 void PolySynth::setOperatorAmount(int operatorId, float amount) {
     for (auto v : voices)
     {
         v->setOperatorAmount(operatorId, amount);
+    }
+}
+
+void PolySynth::setOperatorMode(int operatorId, bool mode) {
+    for (auto v : voices)
+    {
+        v->setOperatorMode(operatorId, mode);
     }
 }
 

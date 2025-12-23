@@ -45,6 +45,9 @@ public:
     
     void setOperatorRatio(int operatorId, float ratio);
     void setOperatorAmount(int operatorId, float amount);
+    void setOperatorMode(int operatorId, bool mode);
+    void setOperatorFixFreq(int operatorId, float fixFreq);
+    
     void setOperatorADSR(int operatorId, float attack, float decay, float sustain, float release);
     void setFeedback(float feedbackAmount);
     void setAlgorithm(int algorithmIndex);
