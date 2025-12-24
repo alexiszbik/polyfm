@@ -189,6 +189,7 @@ void PolySynth::setOperatorADSR(int operatorId, float attack, float decay, float
 }
 
 void PolySynth::setFeedback(float feedbackAmount) {
+    feedbackAmount = clamp(feedbackAmount, 0.f, 1.f);
     for (auto v : voices)
     {
         v->setFeedback(feedbackAmount);
@@ -203,6 +204,7 @@ void PolySynth::setAlgorithm(int algorithmIndex) {
 }
 
 void PolySynth::setBrightness(float brightness) {
+    brightness = clamp(brightness, 0.f, 1.f);
     for (auto v : voices)
     {
         v->setBrightness(brightness);

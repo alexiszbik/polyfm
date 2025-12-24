@@ -117,6 +117,12 @@ void PolyFMDSP::updateParameter(int index, float value) {
         case PlayMode :
             synth.setPolyMode(static_cast<PolySynth::EPolyMode>(valueMap(value, 0, 2)));
             break;
+        case LfoDestinationA:
+            lfo[0].setDestinationValue(value);
+            break;
+        case LfoDestinationB:
+            lfo[1].setDestinationValue(value);
+            break;
         default:
             break;
     }
@@ -168,35 +174,30 @@ float PolyFMDSP::opTimeValue(int operatorId, int aParam, bool applyTimeRatio, fl
     return valueMap(val, min, max);
 }
 
+const char* PolyFMDSP::getLfoDestName(int lfoIdx) {
+    auto dest = lfo[lfoIdx].getDestination();
+    return lfo[lfoIdx].destinationNames[dest];
+}
+
+float PolyFMDSP::getLfoBuffer(Lfo::LfoDest target, uint8_t frame, float multiplier) {
+    return lfo[0].getBuffer(target, frame, multiplier) + lfo[1].getBuffer(target, frame, multiplier);
+}
+
 void PolyFMDSP::process(float** buf, int frameCount) {
     DSPKernel::process(buf, frameCount);
-    
-    timeRatio = getValue(TimeRatio);
     
     synth.setGlide(getValue(Glide));
     synth.setAlgorithm(valueMap(getValue(Algorithm), 0, SynthVoice::kAlgorithmCount - 1));
     
     uint8_t k = lfoCount;
     while (k--) {
-        lfo[k].setRate(getValue(getOpParam(k, LfoRateA)));
-        lfo[k].setAmount(getValue(getOpParam(k, LfoAmountA)));
+        lfo[k].setRate(getValue(getLfoParam(k, LfoRateA)));
+        lfo[k].setAmount(getValue(getLfoParam(k, LfoAmountA)));
         lfo[k].process(frameCount);
     }
     
-    int lfoDest = valueMap(getValue(LfoDestinationA), 0, (int)LfoDest_Count - 1);
-    switch(lfoDest) {
-        case LfoDest_Pitch :
-            break;
-        case LfoDest_Octave :
-            break;
-        case LfoDest_Feedback :
-            break;
-        case LfoDest_Brightness :
-            break;
-        case LfoDest_Timeratio :
-            break;
-            
-    }
+    timeRatio = getValue(TimeRatio) + getLfoBuffer(Lfo::LfoDest_TimeRatio, 0);
+    timeRatio = clamp(timeRatio, 0.0f, 1.0f);
     
     float envAttack = getValue(EnvAttack);
     float envDecay = getValue(EnvDecay);
@@ -218,7 +219,6 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         
         if (useFixedFreq) {
             float fixFreq = valueMap(getValue(getOpParam(i, CoarseA)), 10.f, 2000.f);
-            constexpr float multipliers[] = { 0.001f, 0.01f, 0.1f, 1.f, 10.f };
 
             uint8_t idx = valueMap(getValue(getOpParam(i, FineA)), 0, 4);
             float multiplier = multipliers[idx];
@@ -234,16 +234,15 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         synth.setOperatorAmount(i, getValue(getOpParam(i, AmountA)));
     }
     
-     
     for (int i = 0; i < frameCount; i++) {
         updateParameters(); // useless only for smoothed parameters
         
         float volume = getValue(Volume); 
-        synth.setFeedback(getValue(Feedback));
-        synth.setBrightness(getValue(Brightness));
+        synth.setFeedback(getValue(Feedback) + getLfoBuffer(Lfo::LfoDest_Feedback, i));
+        synth.setBrightness(getValue(Brightness) + getLfoBuffer(Lfo::LfoDest_Brightness, i));
         
         //If we apply lfo to pitch
-        //synth.setTune(lfo[0].getBuffer(i) * 24);
+        synth.setTune(getLfoBuffer(Lfo::LfoDest_Pitch, i, 24));
         
         float out = synth.process() * volume;
        

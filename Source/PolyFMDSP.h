@@ -83,16 +83,6 @@ public:
         Count
     };
     
-    enum LfoDest {
-        LfoDest_Pitch = 0,
-        LfoDest_Octave,
-        LfoDest_Feedback,
-        LfoDest_Brightness,
-        LfoDest_Timeratio,
-        
-        LfoDest_Count
-    };
-    
 public:
     PolyFMDSP();
     ~PolyFMDSP();
@@ -107,6 +97,8 @@ public:
     int getOpParameterForA(int index);
     int getOperatorForIndex(int index);
     
+    const char* getLfoDestName(int lfoIdx);
+    
 protected:
     virtual void updateParameter(int index, float value) override;
     
@@ -114,11 +106,14 @@ private:
     int getLfoParam(int lfoId, int aParam);
     float opTimeValue(int operatorId, int aParam, bool applyTimeRatio, float min = 0.002f, float max = 2.f);
     
+    float getLfoBuffer(Lfo::LfoDest target, uint8_t frame, float multiplier = 1.f);
+    
 private:
     PolySynth synth;
     float timeRatio = 0;
     
     static constexpr uint8_t lfoCount = 2;
+    const float multipliers[5] = { 0.001f, 0.01f, 0.1f, 1.f, 10.f };
     
     Lfo lfo[lfoCount];
     

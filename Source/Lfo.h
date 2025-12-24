@@ -17,6 +17,28 @@ using namespace daisysp;
 
 class Lfo {
 public:
+    enum LfoDest {
+        LfoDest_None = 0,
+        LfoDest_Pitch,
+        LfoDest_Feedback,
+        LfoDest_Brightness,
+        LfoDest_TimeRatio,
+        
+        LfoDest_Count
+    };
+    
+    const char* destinationNames[5] = {
+        "None", "Pitch", "Feedback", "Brightness", "Time Ratio"
+    };
+    
+    enum LfoType {
+        LfoType_Sin,
+        LfoType_Random,
+        
+        LfoType_Count
+    };
+    
+public:
     Lfo();
     ~Lfo() = default;
 
@@ -26,13 +48,19 @@ public:
     
     void setAmount(float amount);
     void setRate(float rate);
+    void setType(float typeValue);
+    void retrigger();
     
-    float getBuffer(uint8_t frame);
+    void setDestinationValue(float value);
+    
+    float getBuffer(LfoDest target, uint8_t frame, float multiplier = 1.f);
+    
+    const LfoDest& getDestination();
 
 private:
-    Oscillator lfo;
     static constexpr uint8_t lfoBufSize = 128;
     float buffer[lfoBufSize];
     
     Oscillator osc;
+    LfoDest dest;
 };

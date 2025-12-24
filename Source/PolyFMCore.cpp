@@ -134,7 +134,16 @@ void PolyFMCore::displayValuesOnScreen() {
     
     if (lastParam) {
         
-        if (paramA >= 0) {
+        if (lastParamIndex == PolyFMDSP::LfoDestinationA) {
+            const char* destName = polyFm.getLfoDestName(0);
+            displayManager->WriteLine(2, destName);
+            
+        } else if (lastParamIndex == PolyFMDSP::LfoDestinationB) {
+            const char* destName = polyFm.getLfoDestName(1);
+            displayManager->WriteLine(2, destName);
+            
+        }
+        else if (paramA >= 0) {
             int pos = 0;
             static constexpr uint8_t cSize = 3;
             

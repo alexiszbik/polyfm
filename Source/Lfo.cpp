@@ -18,11 +18,26 @@ Lfo::Lfo() {
     }
 }
 
-
 void Lfo::init(double sampleRate) {
     osc.Init(sampleRate);
     osc.SetAmp(1);
     osc.SetFreq(1);
+}
+
+void Lfo::setDestinationValue(float value) {
+    dest = (LfoDest)ydaisy::valueMap(value, 0, (int)LfoDest_Count - 1);
+}
+
+const Lfo::LfoDest& Lfo::getDestination() {
+    return dest;
+}
+
+void Lfo::setType(float typeValue) {
+    
+}
+
+void Lfo::retrigger() {
+    
 }
 
 void Lfo::setAmount(float amount) {
@@ -41,6 +56,9 @@ void Lfo::process(size_t frameCount) {
     }
 }
 
-float Lfo::getBuffer(uint8_t frame) {
-    return buffer[frame];
+float Lfo::getBuffer(LfoDest target, uint8_t frame, float multiplier) {
+    if (target != dest) {
+        return 0;
+    }
+    return buffer[frame] * multiplier;
 }
