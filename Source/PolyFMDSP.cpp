@@ -234,8 +234,10 @@ void PolyFMDSP::process(float** buf, int frameCount) {
         synth.setOperatorAmount(i, getValue(getOpParam(i, AmountA)));
     }
     
+    synth.preprare();
+    
     for (int i = 0; i < frameCount; i++) {
-        updateParameters(); // useless only for smoothed parameters
+        //updateParameters(); // useless only for smoothed parameters
         
         float volume = getValue(Volume); 
         synth.setFeedback(getValue(Feedback) + getLfoBuffer(Lfo::LfoDest_Feedback, i));

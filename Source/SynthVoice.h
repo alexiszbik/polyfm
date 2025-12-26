@@ -36,6 +36,7 @@ private:
 public:
     void init(double sampleRate);
     
+    void prepare();
     void processPhase(Operator* op);
     
     void setGlide(float glide);
@@ -45,9 +46,19 @@ public:
     void setOperatorMode(int operatorId, bool mode);
     void setOperatorFixFrequency(int operatorId, float fixedFreq);
     void setOperatorADSR(int operatorId, float attack, float decay, float sustain, float release);
-    void setFeedback(float feedbackAmount);
-    void setAlgorithm(int index);
-    void setBrightness(float brightness);
+    
+    inline void setFeedback(float feedbackAmount) noexcept {
+        this->feedbackAmount = feedbackAmount;
+    }
+
+    inline void setAlgorithm(int index) noexcept {
+        this->selectedAlgorithm = index;
+    }
+
+    inline void setBrightness(float brightness) noexcept {
+        this->brightness = brightness;
+    }
+
     void setEnvParameters(float attack, float decay, float amount);
     
     void setNoteOn(Note note);
@@ -56,11 +67,11 @@ public:
     float process();
     
     //TO REWRITE
-    int currentPitch() {
+    inline int currentPitch() noexcept {
         return pitch.getGoal();
     }
     
-    bool isPlaying() {
+    inline bool isPlaying() noexcept {
         return gate || op[0].adsr.IsRunning();
     }
     
@@ -93,7 +104,7 @@ private:
     float freq = 0;
     float feedback = 0;
     float feedbackAmount = 0;
-    float brigthness = 0;
+    float brightness = 0;
     
     //THIS COULD BE STATIC
     FmAlgorithm algorithms[kAlgorithmCount] = {
@@ -109,6 +120,10 @@ private:
         FmAlgorithm({0, 1, 2}, {}, {}, {3}, 3),
         FmAlgorithm({0, 1, 2, 3}, {}, {}, {}, 3)
     };
+    
+    FmAlgorithm* alg; //currentAlgorithm
+    
+    float factor[4];
     
     int selectedAlgorithm = 0;
     

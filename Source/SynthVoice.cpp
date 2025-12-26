@@ -52,7 +52,8 @@ void SynthVoice::setNoteOff() {
 void SynthVoice::processPhase(Operator* op) {
     float f = op->useFixedFreq ? op->fixFreq : freq;
     op->phase += phaseInc * f * op->ratio;
-    op->phase = fmod(op->phase, 1.0);
+    //op->phase = fmod(op->phase, 1.0);
+    op->phase -= floorf(op->phase);
 }
 
 void SynthVoice::setGlide(float glide) {
@@ -85,30 +86,23 @@ void SynthVoice::setOperatorADSR(int operatorId, float attack, float decay, floa
 void SynthVoice::setEnvParameters(float attack, float decay, float amount) {
     env.SetAttack(attack);
     env.SetDecay(decay);
-    envAmount = amount;
+    envAmount = (48 * amount - 24);
 }
 
-void SynthVoice::setFeedback(float feedbackAmount) {
-    this->feedbackAmount = feedbackAmount;
-}
-
-void SynthVoice::setAlgorithm(int index) {
-    this->selectedAlgorithm = index;
-}
-
-void SynthVoice::setBrightness(float brightness) {
-    this->brigthness = brightness;
+void SynthVoice::prepare() {
+    alg = &algorithms[selectedAlgorithm];
+    for (uint8_t i = 0; i < 4; i++) {
+        factor[i] = alg->isOutput[i] ? 1.f : brightness;
+    }
 }
 
 float SynthVoice::process() {
     
-    float envPitch = env.Process() * (48 * envAmount - 24);
+    float envPitch = env.Process() * envAmount;
     
     pitch.dezipperCheck(sampleRate * glide);
     
     freq = mtof(pitch.getAndStep() + pitchMod + envPitch);
-    
-    FmAlgorithm* alg = &algorithms[selectedAlgorithm];
     
     for (int i = kOperatorCount - 1; i >= 0; i--) {
         Operator* o = &op[i];
@@ -119,8 +113,8 @@ float SynthVoice::process() {
         if (i == alg->feedbackOp) {
             modulator = feedback * feedbackAmount;
         } else {
-            if (alg->getModulatorCount(i)) {
-                for (int index = 0; index < alg->getModulatorCount(i); index++) {
+            if (alg->modulatorCount[i]) {
+                for (int index = 0; index < alg->modulatorCount[i]; index++) {
                     modulator += opOut[alg->getModulator(i, index)];
                 }
             }
@@ -136,11 +130,13 @@ float SynthVoice::process() {
             feedback = opOut[i];
         }
         
-        opOut[i] *= o->amount * (alg->isOutput[i] ? 1 : brigthness);
+        
+        
+        opOut[i] *= o->amount * factor[i];
     }
     
     float out = 0;
-    for (auto outputOpId : alg->outputOperators) {
+    for (auto& outputOpId : alg->outputOperators) {
         out += opOut[outputOpId];
     }
     

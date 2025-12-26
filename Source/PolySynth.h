@@ -35,7 +35,10 @@ public:
 public:
     void init(double sampleRate);
     void setNote(bool isNoteOn, Note note);
+    
+    void preprare();
     float process();
+    
     
     void setPitchBend(float bend);
     void setModWheel(float value);
